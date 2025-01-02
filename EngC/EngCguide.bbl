@@ -1,0 +1,66 @@
+\harvardpreambledefs{%
+\def\cprime{$'$} }
+\harvardpreambletext{%
+\def\cprime{$'$} }
+\begin{thebibliography}{xx}
+
+\harvarditem{Aizenman \harvardand\ Barsky}{1987}{AiBar87}
+Aizenman, M. \harvardand\ Barsky, D.~J.  \harvardyearleft 1987\harvardyearright
+  , `Sharpness of the phase transition in percolation models', {\em Comm. Math.
+  Phys.} {\bf 108},~489--526.
+
+\harvarditem{Hammersley}{1957}{HamLower}
+Hammersley, J.~M.  \harvardyearleft 1957\harvardyearright , `Percolation
+  processes: {L}ower bounds for the critical probability', {\em Ann. Math.
+  Statist.} {\bf 28},~790--795.
+
+\harvarditem{Hammersley}{1961}{HamAtomBond}
+Hammersley, J.~M.  \harvardyearleft 1961\harvardyearright , `Comparison of atom
+  and bond percolation processes', {\em J. Mathematical Phys.} {\bf
+  2},~728--733.
+
+\harvarditem{Hammersley \harvardand\ Mazzarino}{1983}{HamMaz83}
+Hammersley, J.~M. \harvardand\ Mazzarino, G.  \harvardyearleft
+  1983\harvardyearright , Markov fields, correlated percolation, and the
+  {I}sing model, {\em in} `The mathematics and physics of disordered media
+  (Minneapolis, Minn., 1983)', Vol. 1035 of {\em Lecture Notes in Math.},
+  Springer, pp.~201--245.
+
+\harvarditem{Hammersley \harvardand\ Mazzarino}{1994}{HamMaz94}
+Hammersley, J.~M. \harvardand\ Mazzarino, G.  \harvardyearleft
+  1994\harvardyearright , `Properties of large {E}den clusters in the plane',
+  {\em Combin. Probab. Comput.} {\bf 3},~471--505.
+
+\harvarditem{Hammersley \harvardand\ Welsh}{1965}{HamWelsh}
+Hammersley, J.~M. \harvardand\ Welsh, D. J.~A.  \harvardyearleft
+  1965\harvardyearright , First-passage percolation, subadditive processes,
+  stochastic networks, and generalized renewal theory, {\em in} `Proc.
+  Internat. Res. Semin., Statist. Lab., Univ. California, Berkeley, Calif.',
+  Springer, pp.~61--110.
+
+\harvarditem{Kesten}{1990}{Kasymp}
+Kesten, H.  \harvardyearleft 1990\harvardyearright , Asymptotics in high
+  dimensions for percolation, {\em in} G.~R. Grimmett \harvardand\ D.~J.~A.
+  Welsh, eds, `Disorder in Physical Systems: A Volume in Honour of John
+  Hammersley', Oxford University Press, pp.~219--240.
+
+\harvarditem{Menshikov}{1985}{MenshEst}
+Menshikov, M.~V.  \harvardyearleft 1985\harvardyearright , `Estimates for
+  percolation thresholds for lattices in {${\bf R}\sp n$}', {\em Dokl. Akad.
+  Nauk SSSR} {\bf 284},~36--39.
+
+\harvarditem[Menshikov et~al.]{Menshikov, Molchanov \harvardand\
+  Sidorenko}{1986}{MMS}
+Menshikov, M.~V., Molchanov, S.~A. \harvardand\ Sidorenko, A.~F.
+  \harvardyearleft 1986\harvardyearright , Percolation theory and some
+  applications, {\em in} `Probability theory. Mathematical statistics.
+  Theoretical cybernetics, Vol. 24 (Russian)', Akad. Nauk SSSR Vsesoyuz. Inst.
+  Nauchn. i Tekhn. Inform., pp.~53--110.
+\newblock Translated in {\em J. Soviet Math}. {\bf 42} (1988), no. 4,
+  1766--1810.
+
+\harvarditem{Reimer}{2000}{Reimer}
+Reimer, D.  \harvardyearleft 2000\harvardyearright , `Proof of the van den
+  {B}erg--{K}esten conjecture', {\em Combin. Probab. Comput.} {\bf 9},~27--32.
+
+\end{thebibliography}

@@ -1,0 +1,332 @@
+% chap4.tex
+% 2011/02/03, v1.10
+
+\chapter{Reference and bibliography lists}
+
+\section{Automatic lists using Bib\upshape{\TeX}}
+There are three reference style options for the \cambridge\ design: Harvard (author--date), Vancouver (numbered), and IEEE (numbered); please consult with your editor as to which you should be using.
+
+If you are using the multi-contributor option, you will get an unnumbered section heading `References', otherwise it will be an unnumbered chapter heading.
+
+If you switch from one reference style to another, you must delete all .aux and .bbl files first, or you will get some undefined errors, or worse.
+
+This guide has used the Harvard author--date style to produce the reference list on page~\pageref{refs}. Do not be alarmed that the log file contains several warnings such as\linebreak
+\verb"LaTeX Warning: Label `MenshEst' multiply defined." These are as a result of demonstrating the three reference styles; this will not happen when you have chosen just one.
+
+\subsection{Harvard author--date style}
+
+\subsection*{http://www.ctan.org/tex-archive/macros/latex/contrib/harvard/}
+
+First, call in \texttt{harvard.sty}. This style file is supplied with various bibliography styles; we recommend using the \texttt{agsm} option. The bibliography file for this guide (\texttt{\cambridge guide.tex}) is called \texttt{percolation.bib}. Place the \verb"\bibliography" command at the point where you would like the references to appear:
+%
+\begin{verbatim}
+    \usepackage[agsm]{harvard}
+      :
+    \begin{document}
+      :
+  % \renewcommand{\refname}{Bibliography}
+    \bibliography{percolation}
+\end{verbatim}
+%
+Note that if you uncomment the third line shown above, you can change the heading from `References' to `Bibliography'. Next, \LaTeX\ your book twice. Then run \textsc{Bib}\TeX\ by executing the command\\[0.5\baselineskip]
+\verb"  bibtex "\texttt{\cambridge guide}\\[0.5\baselineskip]
+Finally, run your book through \LaTeX\ twice again. This series of runs will generate a file called \texttt{\cambridge guide.bbl}, which will then be included by \verb"\bibliography{percolation}".
+
+Here are the basic citation commands available in the Harvard package; further details can be found in the documentation file \verb"harvard.pdf". Bear in mind that Menshikov (1985) or (Menshikov 1985) read best, depending on context:\\*[0.5\baselineskip]
+\begin{tabular}{@{}ll@{}}
+\verb"\citeasnoun{MenshEst}"
+    & $\rightarrow\enskip$Menshikov (1985)\\
+\verb"\citeasnoun[Appendix B]{MenshEst}"
+    & $\rightarrow\enskip$Menshikov (1985, Appendix~B)\\
+\verb"\cite{MenshEst}"
+    & $\rightarrow\enskip$(Menshikov 1985)\\
+\verb"\cite[Appendix B]{MenshEst}"
+    & $\rightarrow\enskip$(Menshikov 1985, Appendix B)\\
+\verb"\possessivecite{MenshEst}"
+    & $\rightarrow\enskip$Menshikov's (1985)\\
+\verb"\citeaffixed{MenshEst,Reimer}{e.g.}"
+    & $\rightarrow\enskip$(e.g. Menshikov 1985, Reimer 2000)\\
+\verb"\citeyear*{MenshEst,Reimer}"
+    & $\rightarrow\enskip$1985, 2000\\
+\verb"\citeyear{MenshEst,Reimer}"
+    & $\rightarrow\enskip$(1985, 2000)\\
+\verb"\citename{MenshEst}"
+    & $\rightarrow\enskip$Menshikov
+\end{tabular}\\[0.5\baselineskip]
+%
+\noindent Suppose you have cited 8 entries from the `percolation' database, e.g. \verb"\cite{MenshEst}"; \verb"\cite{Kasymp}"; \verb"\cite{Reimer}"; \verb"\cite{HamMaz94}"; \verb"\cite{HamLower}"; \verb"\cite{AiBar87}"; \verb"\cite{MMS}"; and \verb"\cite{HamAtomBond}"; the output will be just those 8~citations; see below.
+
+%%%%%%%%%%%%%%%% OUTPUT FROM HARVARD STYLE %%%%%%%%%%%%%%%%
+\subsection*{Output from harvard author--date style}
+\begin{harvardoutput}
+\item Aizenman, M. \&\ Barsky, D.~J. (1987), `Sharpness of the phase transition in percolation models', {\em Comm. Math. Phys.} \textbf{108},~489--526.
+
+\item Hammersley, J.~M. (1957), `Percolation processes: Lower bounds for the critical probability', {\em Ann. Math. Statist.} \textbf{28},~790--795.
+
+\item Hammersley, J.~M. (1961), `Comparison of atom and bond percolation processes', {\em J. Mathematical Phys.} \textbf{2},~728--733.
+
+\item Hammersley, J.~M. \&\ Mazzarino, G. (1994), `Properties of large Eden clusters in the plane', {\em Combin. Probab. Comput.} \textbf{3},~471--505.
+
+\item Kesten, H. (1990), Asymptotics in high dimensions for percolation, {\em in} G.~R. Grimmett \&\ D.~J.~A. Welsh, eds, `Disorder in Physical Systems: A Volume in Honour of John Hammersley', Oxford University Press, pp.~219--240.
+
+\item Menshikov, M.~V. (1985), `Estimates for percolation thresholds for lattices in $\textbf{R}^n$', {\em Dokl. Akad. Nauk SSSR} \textbf{284},~36--39.
+
+\item Menshikov, M.~V., Molchanov, S.~A. \&\ Sidorenko, A.~F. (1986), Percolation theory and some applications, {\em in} `Probability theory. Mathematical statistics. Theoretical cybernetics, Vol. 24 (Russian)', Akad. Nauk SSSR Vsesoyuz. Inst. Nauchn. i Tekhn. Inform., pp.~53--110. Translated in {\em J. Soviet Math}. \textbf{42} (1988), no. 4, 1766--1810.
+
+\item Reimer, D. (2000), `Proof of the van den Berg--Kesten conjecture', {\em Combin. Probab. Comput.} \textbf{9},~27--32.
+
+\end{harvardoutput}
+%%%%%%%%%%%%%%%% END OF OUTPUT FROM HARVARD STYLE %%%%%%%%%%%%%%%%
+
+\subsection*{Harvard author--date style -- keying in your own reference list}
+You do not have to use \textsc{Bib}\TeX\ to generate your list of references; the above list may be keyed as follows:
+\begin{verbatim}
+\begin{harvardoutput}
+\item Aizenman, M. \&\ Barsky, D.~J. (1987), `Sharpness...~489--526.
+\item Hammersley, J.~M. (1957), `Percolation...~790--795.
+\item Hammersley, J.~M. (1961), `Comparison of atom...~728--733.
+\item Hammersley, J.~M. \&\ Mazzarino, G. (1994), `Properties...~471--505.
+\item Kesten, H. (1990), Asymptotics in high dimensions...~219--240.
+\item Menshikov, M.~V. (1985), `Estimates for percolation...~36--39.
+\item Menshikov, M.~V., Molchanov, S.~A. \&\ Sidorenko, A.~F....1766--1810.
+\item Reimer, D. (2000), `Proof of the van den Berg--Kesten...~27--32.
+\end{harvardoutput}
+\end{verbatim}
+
+\subsection{Vancouver numbered style}
+
+\subsection*{http://www.ctan.org/tex-archive/biblio/bibtex/contrib/vancouver/}
+
+First, call in the vancouver bibliography style file (\verb"vancouver.bst") as shown below. The bibliography file for this guide (\texttt{\cambridge guide.tex}) is called \texttt{percolation.bib}. Place the \verb"\bibliography" command at the point where you would like the references to appear:
+%
+\begin{verbatim}
+  % \removesquarebraces
+      :
+    \begin{document}
+      :
+    \bibliographystyle{vancouver}
+      :
+  % \renewcommand{\refname}{Bibliography}
+    \bibliography{percolation}
+\end{verbatim}
+%
+Note that if you uncomment the first line, \verb"\removesquarebraces", the square braces will be removed from the final listing (but will remain in place for citations). If you uncomment the fourth line shown above, you can change the heading from `References' to `Bibliography'. Next, \LaTeX\ your book twice. Then run \textsc{Bib}\TeX\ by executing the command\\[0.5\baselineskip]
+\verb"  bibtex "\texttt{\cambridge guide}\\[0.5\baselineskip]
+Finally, run your book through \LaTeX\ twice again. This series of runs will generate a file called \texttt{\cambridge guide.bbl}, which will then be included by \verb"\bibliography{percolation}".
+
+Here are the basic citation commands available in the Vancouver package; further details can be found in the documentation file \verb"vancouver.pdf". Note that you may have more than one entry within the \verb"\cite" command:\\*[0.5\baselineskip]
+\begin{tabular}{@{}ll@{}}
+\verb"\cite{MenshEst}"
+    & $\rightarrow\enskip$[1]\\
+\verb"\cite{MenshEst,Reimer}"
+    & $\rightarrow\enskip$[1, 3]\\
+\verb"\cite[Chapter~2]{MenshEst}"
+    & $\rightarrow\enskip$[1, Chapter~2]\\
+\end{tabular}\\[0.5\baselineskip]
+%
+\noindent Suppose you have cited 10 entries from the `percolation' database, e.g. \verb"\cite{MenshEst}"; \verb"\cite{Kasymp}"; \verb"\cite{Reimer}"; \verb"\cite{HamMaz94}"; \verb"\cite{HamLower}"; \verb"\cite{AiBar87}"; \verb"\cite{MMS}"; \verb"\cite{HamAtomBond}";  \verb"\cite{HamMaz83}" and \verb"\cite{HamWelsh}"; the output will be just those 10~citations; see below.
+
+%%%%%%%%%%%%%%%% OUTPUT FROM VANCOUVER STYLE %%%%%%%%%%%%%%%%
+\subsection*{Output from vancouver numbered style}
+\begin{vancouveroutput}{10}
+
+\bibitem{MenshEst}
+Menshikov MV.
+\newblock Estimates for percolation thresholds for lattices in {${\bf R}\sp
+  n$}.
+\newblock Dokl Akad Nauk SSSR. 1985;284:36--39.
+
+\bibitem{Kasymp}
+Kesten H.
+\newblock Asymptotics in high dimensions for percolation.
+\newblock In: Grimmett GR, Welsh DJA, editors. Disorder in Physical Systems: A
+  Volume in Honour of John Hammersley. Oxford University Press; 1990. p.
+  219--240.
+
+\bibitem{Reimer}
+Reimer D.
+\newblock Proof of the van den {B}erg--{K}esten conjecture.
+\newblock Combin Probab Comput. 2000;9:27--32.
+
+\bibitem{HamMaz94}
+Hammersley JM, Mazzarino G.
+\newblock Properties of large {E}den clusters in the plane.
+\newblock Combin Probab Comput. 1994;3:471--505.
+
+\bibitem{HamLower}
+Hammersley JM.
+\newblock Percolation processes: {L}ower bounds for the critical probability.
+\newblock Ann Math Statist. 1957;28:790--795.
+
+\bibitem{AiBar87}
+Aizenman M, Barsky DJ.
+\newblock Sharpness of the phase transition in percolation models.
+\newblock Comm Math Phys. 1987;108:489--526.
+
+\bibitem{MMS}
+Menshikov MV, Molchanov SA, Sidorenko AF.
+\newblock Percolation theory and some applications.
+\newblock In: Probability theory. Mathematical statistics. Theoretical
+  cybernetics, Vol. 24 (Russian). Akad. Nauk SSSR Vsesoyuz. Inst. Nauchn. i
+  Tekhn. Inform.; 1986. p. 53--110.
+\newblock Translated in {\em J. Soviet Math}. {\bf 42} (1988), no. 4,
+  1766--1810.
+
+\bibitem{HamAtomBond}
+Hammersley JM.
+\newblock Comparison of atom and bond percolation processes.
+\newblock J Mathematical Phys. 1961;2:728--733.
+
+\bibitem{HamMaz83}
+Hammersley JM, Mazzarino G.
+\newblock Markov fields, correlated percolation, and the {I}sing model.
+\newblock In: The mathematics and physics of disordered media (Minneapolis,
+  Minn., 1983). vol. 1035 of Lecture Notes in Math. Springer; 1983. p.
+  201--245.
+
+\bibitem{HamWelsh}
+Hammersley JM, Welsh DJA.
+\newblock First-passage percolation, subadditive processes, stochastic
+  networks, and generalized renewal theory.
+\newblock In: Proc. Internat. Res. Semin., Statist. Lab., Univ. California,
+  Berkeley, Calif. Springer; 1965. p. 61--110.
+
+\end{vancouveroutput}
+%%%%%%%%%%%%%%%% END OF OUTPUT FROM VANCOUVER STYLE %%%%%%%%%%%%%%%%
+
+\subsection*{Vancouver numbered style -- keying in your own reference list}
+You do not have to use \textsc{Bib}\TeX\ to generate your list of references; the above list may be keyed as follows. Note that you need to specify the number of references (10~in this case) so that \LaTeX\ can work out how wide the margin needs to be.
+\begin{verbatim}
+\begin{vancouveroutput}{10}
+\bibitem{} Menshikov MV. Estimates for percolation...1985;284:36--39.
+\bibitem{} Kesten H. Asymptotics in high dimensions...1990. p.~219--240.
+\bibitem{} Reimer D. Proof of the van den Berg--Kesten...2000;9:27--32.
+\bibitem{} Hammersley JM, Mazzarino G. Properties...1994;3:471--505.
+\bibitem{} Hammersley JM. Percolation processes:...1957;28:790--795.
+\bibitem{} Aizenman M, Barsky DJ. Sharpness of the phase...1987;108:489--526.
+\bibitem{} Menshikov MV, Molchanov SA, Sidorenko AF. Percolation...1766--1810.
+\bibitem{} Hammersley JM. Comparison of atom and bond...1961;2:728--733.
+\bibitem{} Hammersley JM, Mazzarino G. Markov fields,...p.~201--245.
+\bibitem{} Hammersley JM, Welsh DJA. First-passage percolation,...p.~61--110.
+\end{vancouveroutput}
+\end{verbatim}
+
+\subsection{IEEE numbered style}
+
+\subsection*{http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/bibtex/}
+
+First, call in the IEEE bibliography style file (IEEEtran.bst) as shown below. The bibliography file for this guide (\texttt{\cambridge guide.tex}) is called \texttt{percolation.bib}. Place the \verb"\bibliography" command at the point where you would like the references to appear:
+%
+\begin{verbatim}
+  % \removesquarebraces
+      :
+    \begin{document}
+      :
+    \bibliographystyle{IEEEtran}
+      :
+  % \renewcommand{\refname}{Bibliography}
+    \bibliography{percolation}
+\end{verbatim}
+%
+Note that if you uncomment the first line, \verb"\removesquarebraces", the square braces will be removed from the final listing (but will remain in place for citations). If you uncomment the fourth line shown above, you can change the heading from `References' to `Bibliography'. Next, \LaTeX\ your book twice. Then run \textsc{Bib}\TeX\ by executing the command\\[0.5\baselineskip]
+\verb"  bibtex "\texttt{\cambridge guide}\\[0.5\baselineskip]
+Finally, run your book through \LaTeX\ twice again. This series of runs will generate a file called \texttt{\cambridge guide.bbl}, which will then be included by \verb"\bibliography{percolation}".
+
+Here are the basic citation commands available in the IEEEtran package; further details can be found in the documentation file \verb"IEEEtran_bst_HOWTO.pdf". Note that you may have more than one entry within the \verb"\cite" command:\\*[0.5\baselineskip]
+\begin{tabular}{@{}ll@{}}
+\verb"\cite{MenshEst}"
+    & $\rightarrow\enskip$[1]\\
+\verb"\cite{MenshEst,Reimer}"
+    & $\rightarrow\enskip$[1, 3]\\
+\verb"\cite[Chapter~2]{MenshEst}"
+    & $\rightarrow\enskip$[1, Chapter~2]\\
+\end{tabular}\\[0.5\baselineskip]
+%
+\noindent Suppose you have cited 10 entries from the `percolation' database, e.g. \verb"\cite{MenshEst}"; \verb"\cite{Kasymp}"; \verb"\cite{Reimer}"; \verb"\cite{HamMaz94}"; \verb"\cite{HamLower}"; \verb"\cite{AiBar87}"; \verb"\cite{MMS}"; \verb"\cite{HamAtomBond}";  \verb"\cite{HamMaz83}" and \verb"\cite{HamWelsh}"; the output will be just those 10~citations; see below.
+
+%%%%%%%%%%%%%%%% OUTPUT FROM IEEEtran STYLE %%%%%%%%%%%%%%%%
+\subsection*{Output from IEEEtran numbered style}
+\begin{IEEEtranoutput}{10}
+
+\bibitem{MenshEst}
+M.~V. Menshikov, ``Estimates for percolation thresholds for lattices in {${\bf
+  R}\sp n$},'' \emph{Dokl. Akad. Nauk SSSR}, vol. 284, pp. 36--39, 1985.
+
+\bibitem{Kasymp}
+H.~Kesten, ``Asymptotics in high dimensions for percolation,'' in
+  \emph{Disorder in Physical Systems: A Volume in Honour of John Hammersley},
+  G.~R. Grimmett and D.~J.~A. Welsh, Eds.\hskip 1em plus 0.5em minus
+  0.4em\relax Oxford University Press, 1990, pp. 219--240.
+
+\bibitem{Reimer}
+D.~Reimer, ``Proof of the van den {B}erg--{K}esten conjecture,'' \emph{Combin.
+  Probab. Comput.}, vol.~9, pp. 27--32, 2000.
+
+\bibitem{HamMaz94}
+J.~M. Hammersley and G.~Mazzarino, ``Properties of large {E}den clusters in the
+  plane,'' \emph{Combin. Probab. Comput.}, vol.~3, pp. 471--505, 1994.
+
+\bibitem{HamLower}
+J.~M. Hammersley, ``Percolation processes: {L}ower bounds for the critical
+  probability,'' \emph{Ann. Math. Statist.}, vol.~28, pp. 790--795, 1957.
+
+\bibitem{AiBar87}
+M.~Aizenman and D.~J. Barsky, ``Sharpness of the phase transition in
+  percolation models,'' \emph{Comm. Math. Phys.}, vol. 108, pp. 489--526, 1987.
+
+\bibitem{MMS}
+M.~V. Menshikov, S.~A. Molchanov, and A.~F. Sidorenko, ``Percolation theory and
+  some applications,'' in \emph{Probability theory. Mathematical statistics.
+  Theoretical cybernetics, Vol. 24 (Russian)}.\hskip 1em plus 0.5em minus
+  0.4em\relax Akad. Nauk SSSR Vsesoyuz. Inst. Nauchn. i Tekhn. Inform., 1986,
+  pp. 53--110, translated in {\em J. Soviet Math}. {\bf 42} (1988), no. 4,
+  1766--1810.
+
+\bibitem{HamAtomBond}
+J.~M. Hammersley, ``Comparison of atom and bond percolation processes,''
+  \emph{J. Mathematical Phys.}, vol.~2, pp. 728--733, 1961.
+
+\bibitem{HamMaz83}
+J.~M. Hammersley and G.~Mazzarino, ``Markov fields, correlated percolation, and
+  the {I}sing model,'' in \emph{The mathematics and physics of disordered media
+  (Minneapolis, Minn., 1983)}, ser. Lecture Notes in Math.\hskip 1em plus 0.5em
+  minus 0.4em\relax Springer, 1983, vol. 1035, pp. 201--245.
+
+\bibitem{HamWelsh}
+J.~M. Hammersley and D.~J.~A. Welsh, ``First-passage percolation, subadditive
+  processes, stochastic networks, and generalized renewal theory,'' in
+  \emph{Proc. Internat. Res. Semin., Statist. Lab., Univ. California, Berkeley,
+  Calif.}\hskip 1em plus 0.5em minus 0.4em\relax Springer, 1965, pp. 61--110.
+
+\end{IEEEtranoutput}
+%%%%%%%%%%%%%%%% END OF OUTPUT FROM IEEEtran STYLE %%%%%%%%%%%%%%%%
+
+\subsection*{IEEEtran numbered style -- keying in your own reference list}
+You do not have to use \textsc{Bib}\TeX\ to generate your list of references; the above list may be keyed as follows. Note that you need to specify the number of references (10~in this case) so that \LaTeX\ can work out how wide the margin needs to be.
+\begin{verbatim}
+\begin{IEEEtranoutput}{10}
+\bibitem{} M.~V. Menshikov, ``Estimates for percolation...pp.~36--39, 1985.
+\bibitem{} H.~Kesten, ``Asymptotics in high dimensions for...pp.~219--240.
+\bibitem{} D.~Reimer, ``Proof of the van den Berg--Kesten...pp.~27--32, 2000.
+\bibitem{} J.~M. Hammersley and G.~Mazzarino, ``Properties...pp.~471--505, 1994.
+\bibitem{} J.~M. Hammersley, ``Percolation processes: Lower...pp.~790--795, 1957.
+\bibitem{} M.~Aizenman and D.~J. Barsky, ``Sharpness of the...pp.~489--526, 1987.
+\bibitem{} M.~V. Menshikov, S.~A. Molchanov, and A.~F. Sidorenko,...no.~4, 1766--1810.
+\bibitem{} J.~M. Hammersley, ``Comparison of atom and bond...pp.~728--733, 1961.
+\bibitem{} J.~M. Hammersley and G.~Mazzarino, ``Markov fields,...pp.~201--245.
+\bibitem{} J.~M. Hammersley and D.~J.~A. Welsh, ``First-passage...pp.~61--110.
+\end{IEEEtranoutput}
+\end{verbatim}
+
+\nocite{MenshEst}
+\nocite{Kasymp}
+\nocite{Reimer}
+\nocite{HamMaz94}
+\nocite{HamLower}
+\nocite{AiBar87}
+\nocite{MMS}
+\nocite{HamAtomBond}
+\nocite{HamMaz83}
+\nocite{HamWelsh}
+
+\endinput
