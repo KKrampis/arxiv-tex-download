@@ -1,0 +1,194 @@
+\begin{thebibliography}{38}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Anthropic(2024)}]{claude}
+Anthropic. 2024.
+\newblock \href {https://www.anthropic.com/claude} {{Claude}}.
+
+\bibitem[{Arora et~al.(2023)Arora, Singh, and Mausam}]{Arora2023HaveLA}
+Daman Arora, Himanshu~Gaurav Singh, and Mausam. 2023.
+\newblock \href {https://api.semanticscholar.org/CorpusID:258866000} {Have llms advanced enough? a challenging problem solving benchmark for large language models}.
+\newblock \emph{ArXiv}, abs/2305.15074.
+
+\bibitem[{Boguraev et~al.(2024)Boguraev, Lipkin, Weissweiler, and Mahowald}]{boguraev2024modelsembracecommunicativenature}
+Sasha Boguraev, Ben Lipkin, Leonie Weissweiler, and Kyle Mahowald. 2024.
+\newblock \href {https://arxiv.org/abs/2409.17005} {Models can and should embrace the communicative nature of human-generated math}.
+\newblock \emph{Preprint}, arXiv:2409.17005.
+
+\bibitem[{Cobbe et~al.(2021)Cobbe, Kosaraju, Bavarian, Chen, Jun, Kaiser, Plappert, Tworek, Hilton, Nakano, Hesse, and Schulman}]{cobbe2021trainingverifierssolvemath}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano, Christopher Hesse, and John Schulman. 2021.
+\newblock \href {https://arxiv.org/abs/2110.14168} {Training verifiers to solve math word problems}.
+\newblock \emph{Preprint}, arXiv:2110.14168.
+
+\bibitem[{Deng et~al.(2024)Deng, Choi, and Shieber}]{deng2024explicitcotimplicitcot}
+Yuntian Deng, Yejin Choi, and Stuart Shieber. 2024.
+\newblock \href {https://arxiv.org/abs/2405.14838} {From explicit cot to implicit cot: Learning to internalize cot step by step}.
+\newblock \emph{Preprint}, arXiv:2405.14838.
+
+\bibitem[{Deng et~al.(2023)Deng, Prasad, Fernandez, Smolensky, Chaudhary, and Shieber}]{deng2023implicitchainthoughtreasoning}
+Yuntian Deng, Kiran Prasad, Roland Fernandez, Paul Smolensky, Vishrav Chaudhary, and Stuart Shieber. 2023.
+\newblock \href {https://arxiv.org/abs/2311.01460} {Implicit chain of thought reasoning via knowledge distillation}.
+\newblock \emph{Preprint}, arXiv:2311.01460.
+
+\bibitem[{Dubey et~al.(2024)Dubey, Jauhri, Pandey, Kadian, Al-Dahle, Letman, Mathur, Schelten, Yang, Fan, Goyal, Hartshorn, Yang, Mitra, Sravankumar, Korenev, Hinsvark, Rao, Zhang, Rodriguez, Gregerson, Spataru, Roziere, Biron, Tang, Chern, Caucheteux, Nayak, Bi, and et~al.}]{dubey2024llama3herdmodels}
+Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schelten, Amy Yang, Angela Fan, Anirudh Goyal, Anthony Hartshorn, Aobo Yang, Archi Mitra, Archie Sravankumar, Artem Korenev, Arthur Hinsvark, Arun Rao, Aston Zhang, Aurelien Rodriguez, Austen Gregerson, Ava Spataru, Baptiste Roziere, Bethany Biron, Binh Tang, Bobbie Chern, Charlotte Caucheteux, Chaya Nayak, Chloe Bi, and et~al. 2024.
+\newblock \href {https://arxiv.org/abs/2407.21783} {The llama 3 herd of models}.
+\newblock \emph{Preprint}, arXiv:2407.21783.
+
+\bibitem[{Guo et~al.(2024)Guo, Didolkar, Ke, Goyal, Huszár, and Schölkopf}]{guo2024learningpatternmatchingassaying}
+Siyuan Guo, Aniket Didolkar, Nan~Rosemary Ke, Anirudh Goyal, Ferenc Huszár, and Bernhard Schölkopf. 2024.
+\newblock \href {https://arxiv.org/abs/2405.15485} {Learning beyond pattern matching? assaying mathematical understanding in llms}.
+\newblock \emph{Preprint}, arXiv:2405.15485.
+
+\bibitem[{Hanna et~al.(2023)Hanna, Liu, and Variengien}]{hanna2023doesgpt2computegreaterthan}
+Michael Hanna, Ollie Liu, and Alexandre Variengien. 2023.
+\newblock \href {https://arxiv.org/abs/2305.00586} {How does gpt-2 compute greater-than?: Interpreting mathematical abilities in a pre-trained language model}.
+\newblock \emph{Preprint}, arXiv:2305.00586.
+
+\bibitem[{Hendrycks et~al.(2021)Hendrycks, Burns, Kadavath, Arora, Basart, Tang, Song, and Steinhardt}]{hendrycks2021measuringmathematicalproblemsolving}
+Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric Tang, Dawn Song, and Jacob Steinhardt. 2021.
+\newblock \href {https://arxiv.org/abs/2103.03874} {Measuring mathematical problem solving with the math dataset}.
+\newblock \emph{Preprint}, arXiv:2103.03874.
+
+\bibitem[{Huang et~al.(2016)Huang, Shi, Lin, Yin, and Ma}]{huang-etal-2016-well}
+Danqing Huang, Shuming Shi, Chin-Yew Lin, Jian Yin, and Wei-Ying Ma. 2016.
+\newblock \href {https://doi.org/10.18653/v1/P16-1084} {How well do computers solve math word problems? large-scale dataset construction and evaluation}.
+\newblock In \emph{Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)}, pages 887--896, Berlin, Germany. Association for Computational Linguistics.
+
+\bibitem[{Kalajdzievski(2023)}]{kalajdzievski2023rankstabilizationscalingfactor}
+Damjan Kalajdzievski. 2023.
+\newblock \href {https://arxiv.org/abs/2312.03732} {A rank stabilization scaling factor for fine-tuning with lora}.
+\newblock \emph{Preprint}, arXiv:2312.03732.
+
+\bibitem[{Karpathy(2022)}]{karpathy2022nanoGPT}
+Andrej Karpathy. 2022.
+\newblock Andrej karpathy's lightweight implementation of medium-sized gpts.
+\newblock \url{https://github.com/karpathy/nanoGPT}.
+\newblock Accessed: 2024-09-28.
+
+\bibitem[{Kushman et~al.(2014)Kushman, Artzi, Zettlemoyer, and Barzilay}]{kushman-etal-2014-learning}
+Nate Kushman, Yoav Artzi, Luke Zettlemoyer, and Regina Barzilay. 2014.
+\newblock \href {https://doi.org/10.3115/v1/P14-1026} {Learning to automatically solve algebra word problems}.
+\newblock In \emph{Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)}, pages 271--281, Baltimore, Maryland. Association for Computational Linguistics.
+
+\bibitem[{Kwon et~al.(2023)Kwon, Li, Zhuang, Sheng, Zheng, Yu, Gonzalez, Zhang, and Stoica}]{kwon2023efficient}
+Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng, Cody~Hao Yu, Joseph~E. Gonzalez, Hao Zhang, and Ion Stoica. 2023.
+\newblock Efficient memory management for large language model serving with pagedattention.
+\newblock In \emph{Proceedings of the ACM SIGOPS 29th Symposium on Operating Systems Principles}.
+
+\bibitem[{Lee et~al.(2023)Lee, Sreenivasan, Lee, Lee, and Papailiopoulos}]{lee2023teachingarithmeticsmalltransformers}
+Nayoung Lee, Kartik Sreenivasan, Jason~D. Lee, Kangwook Lee, and Dimitris Papailiopoulos. 2023.
+\newblock \href {https://arxiv.org/abs/2307.03381} {Teaching arithmetic to small transformers}.
+\newblock \emph{Preprint}, arXiv:2307.03381.
+
+\bibitem[{Lewkowycz et~al.(2022)Lewkowycz, Andreassen, Dohan, Dyer, Michalewski, Ramasesh, Slone, Anil, Schlag, Gutman-Solo, Wu, Neyshabur, Gur-Ari, and Misra}]{lewkowycz2022solving}
+Aitor Lewkowycz, Anders~Johan Andreassen, David Dohan, Ethan Dyer, Henryk Michalewski, Vinay~Venkatesh Ramasesh, Ambrose Slone, Cem Anil, Imanol Schlag, Theo Gutman-Solo, Yuhuai Wu, Behnam Neyshabur, Guy Gur-Ari, and Vedant Misra. 2022.
+\newblock \href {https://openreview.net/forum?id=IFXTZERXdM7} {Solving quantitative reasoning problems with language models}.
+\newblock In \emph{Advances in Neural Information Processing Systems}.
+
+\bibitem[{Liu et~al.(2023)Liu, Singh, Freeman, Co-Reyes, and Liu}]{liu2023improvinglargelanguagemodel}
+Yixin Liu, Avi Singh, C.~Daniel Freeman, John~D. Co-Reyes, and Peter~J. Liu. 2023.
+\newblock \href {https://arxiv.org/abs/2310.10047} {Improving large language model fine-tuning for solving math problems}.
+\newblock \emph{Preprint}, arXiv:2310.10047.
+
+\bibitem[{OpenAI et~al.(2024)OpenAI, Achiam, Adler, Agarwal, Ahmad, Akkaya, Aleman, Almeida, Altenschmidt, Altman, Anadkat, Avila, Babuschkin, Balaji, Balcom, Baltescu, Bao, Bavarian, Belgum, Bello, Berdine, Bernadett-Shapiro, Berner, Bogdonoff, Boiko, Boyd, Brakman, Brockman, and et~al.}]{openai2024gpt4technicalreport}
+OpenAI, Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Florencia~Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal Anadkat, Red Avila, Igor Babuschkin, Suchir Balaji, Valerie Balcom, Paul Baltescu, Haiming Bao, Mohammad Bavarian, Jeff Belgum, Irwan Bello, Jake Berdine, Gabriel Bernadett-Shapiro, Christopher Berner, Lenny Bogdonoff, Oleg Boiko, Madelaine Boyd, Anna-Luisa Brakman, Greg Brockman, and et~al. 2024.
+\newblock \href {https://arxiv.org/abs/2303.08774} {Gpt-4 technical report}.
+\newblock \emph{Preprint}, arXiv:2303.08774.
+
+\bibitem[{Radford et~al.(2019)Radford, Wu, Child, Luan, Amodei, Sutskever et~al.}]{radford2019language}
+Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever, et~al. 2019.
+\newblock Language models are unsupervised multitask learners.
+\newblock \emph{OpenAI blog}, 1(8):9.
+
+\bibitem[{Stolfo et~al.(2023)Stolfo, Belinkov, and Sachan}]{stolfo-etal-2023-mechanistic}
+Alessandro Stolfo, Yonatan Belinkov, and Mrinmaya Sachan. 2023.
+\newblock \href {https://doi.org/10.18653/v1/2023.emnlp-main.435} {A mechanistic interpretation of arithmetic reasoning in language models using causal mediation analysis}.
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing}, pages 7035--7052, Singapore. Association for Computational Linguistics.
+
+\bibitem[{Sundaram et~al.(2022)Sundaram, Gurajada, Fisichella, P, and Abraham}]{Sundaram2022WhyAN}
+Sowmya~S. Sundaram, Sairam Gurajada, Marco Fisichella, Deepak P, and Savitha~Sam Abraham. 2022.
+\newblock \href {https://api.semanticscholar.org/CorpusID:249209981} {Why are nlp models fumbling at elementary math? a survey of deep learning based word problem solvers}.
+\newblock \emph{ArXiv}, abs/2205.15683.
+
+\bibitem[{Team et~al.(2024)Team, Riviere, Pathak, Sessa, Hardin, Bhupatiraju, Hussenot, Mesnard, Shahriari, Ramé, Ferret, Liu, Tafti, Friesen, Casbon, Ramos, Kumar, Lan, Jerome, Tsitsulin, Vieillard, Stanczyk, and et~al.}]{gemmateam2024gemma2improvingopen}
+Gemma Team, Morgane Riviere, Shreya Pathak, Pier~Giuseppe Sessa, Cassidy Hardin, Surya Bhupatiraju, Léonard Hussenot, Thomas Mesnard, Bobak Shahriari, Alexandre Ramé, Johan Ferret, Peter Liu, Pouya Tafti, Abe Friesen, Michelle Casbon, Sabela Ramos, Ravin Kumar, Charline~Le Lan, Sammy Jerome, Anton Tsitsulin, Nino Vieillard, Piotr Stanczyk, and et~al. 2024.
+\newblock \href {https://arxiv.org/abs/2408.00118} {Gemma 2: Improving open language models at a practical size}.
+\newblock \emph{Preprint}, arXiv:2408.00118.
+
+\bibitem[{Thawani et~al.(2021)Thawani, Pujara, Ilievski, and Szekely}]{thawani-etal-2021-representing}
+Avijit Thawani, Jay Pujara, Filip Ilievski, and Pedro Szekely. 2021.
+\newblock \href {https://doi.org/10.18653/v1/2021.naacl-main.53} {Representing numbers in {NLP}: a survey and a vision}.
+\newblock In \emph{Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies}, pages 644--656, Online. Association for Computational Linguistics.
+
+\bibitem[{Wang et~al.(2023)Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery, and Zhou}]{wang2023selfconsistencyimproveschainthought}
+Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed~Chi, Sharan Narang, Aakanksha Chowdhery, and Denny Zhou. 2023.
+\newblock \href {https://arxiv.org/abs/2203.11171} {Self-consistency improves chain of thought reasoning in language models}.
+\newblock \emph{Preprint}, arXiv:2203.11171.
+
+\bibitem[{Wang et~al.(2017)Wang, Liu, and Shi}]{wang-etal-2017-deep}
+Yan Wang, Xiaojiang Liu, and Shuming Shi. 2017.
+\newblock \href {https://doi.org/10.18653/v1/D17-1088} {Deep neural solver for math word problems}.
+\newblock In \emph{Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing}, pages 845--854, Copenhagen, Denmark. Association for Computational Linguistics.
+
+\bibitem[{Wei et~al.(2023)Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le, and Zhou}]{wei2023chainofthoughtpromptingelicitsreasoning}
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia, Ed~Chi, Quoc Le, and Denny Zhou. 2023.
+\newblock \href {https://arxiv.org/abs/2201.11903} {Chain-of-thought prompting elicits reasoning in large language models}.
+\newblock \emph{Preprint}, arXiv:2201.11903.
+
+\bibitem[{Wu et~al.(2024{\natexlab{a}})Wu, Jia, Zhang, Li, Zhu, Wang, Lee, Peng, Wu, and Wang}]{wu2024mathchatconversetacklechallenging}
+Yiran Wu, Feiran Jia, Shaokun Zhang, Hangyu Li, Erkang Zhu, Yue Wang, Yin~Tat Lee, Richard Peng, Qingyun Wu, and Chi Wang. 2024{\natexlab{a}}.
+\newblock \href {https://arxiv.org/abs/2306.01337} {Mathchat: Converse to tackle challenging math problems with llm agents}.
+\newblock \emph{Preprint}, arXiv:2306.01337.
+
+\bibitem[{Wu et~al.(2024{\natexlab{b}})Wu, Geiger, Icard, Potts, and Goodman}]{wu2024interpretabilityscaleidentifyingcausal}
+Zhengxuan Wu, Atticus Geiger, Thomas Icard, Christopher Potts, and Noah~D. Goodman. 2024{\natexlab{b}}.
+\newblock \href {https://arxiv.org/abs/2305.08809} {Interpretability at scale: Identifying causal mechanisms in alpaca}.
+\newblock \emph{Preprint}, arXiv:2305.08809.
+
+\bibitem[{Xie et~al.(2024)Xie, Huang, Wang, and Dhingra}]{xie2024adversarialmathwordproblem}
+Roy Xie, Chengxuan Huang, Junlin Wang, and Bhuwan Dhingra. 2024.
+\newblock \href {https://arxiv.org/abs/2402.17916} {Adversarial math word problem generation}.
+\newblock \emph{Preprint}, arXiv:2402.17916.
+
+\bibitem[{Yang et~al.(2023)Yang, Ding, Lv, Jiang, He, Guo, Bai, and Tang}]{yang2023gptsolvemathematicalproblems}
+Zhen Yang, Ming Ding, Qingsong Lv, Zhihuan Jiang, Zehai He, Yuyi Guo, Jinfeng Bai, and Jie Tang. 2023.
+\newblock \href {https://arxiv.org/abs/2309.03241} {Gpt can solve mathematical problems without a calculator}.
+\newblock \emph{Preprint}, arXiv:2309.03241.
+
+\bibitem[{Yue et~al.(2023)Yue, Qu, Zhang, Fu, Huang, Sun, Su, and Chen}]{Yue2023MAmmoTHBM}
+Xiang Yue, Xingwei Qu, Ge~Zhang, Yao Fu, Wenhao Huang, Huan Sun, Yu~Su, and Wenhu Chen. 2023.
+\newblock \href {https://api.semanticscholar.org/CorpusID:261696697} {Mammoth: Building math generalist models through hybrid instruction tuning}.
+\newblock \emph{ArXiv}, abs/2309.05653.
+
+\bibitem[{Zhang et~al.(2024)Zhang, Wan, Zhang, ming Cheung, Tian, Shen, and Ye}]{zhang2024interpretingimprovinglargelanguage}
+Wei Zhang, Chaoqun Wan, Yonggang Zhang, Yiu ming Cheung, Xinmei Tian, Xu~Shen, and Jieping Ye. 2024.
+\newblock \href {https://arxiv.org/abs/2409.01659} {Interpreting and improving large language models in arithmetic calculation}.
+\newblock \emph{Preprint}, arXiv:2409.01659.
+
+\bibitem[{Zhang-Li et~al.(2024)Zhang-Li, Lin, Yu, Zhang, Yao, Zhang, Hou, Zhang, and Li}]{zhangli2024reversenumberdecodingorder}
+Daniel Zhang-Li, Nianyi Lin, Jifan Yu, Zheyuan Zhang, Zijun Yao, Xiaokang Zhang, Lei Hou, Jing Zhang, and Juanzi Li. 2024.
+\newblock \href {https://arxiv.org/abs/2403.05845} {Reverse that number! decoding order matters in arithmetic learning}.
+\newblock \emph{Preprint}, arXiv:2403.05845.
+
+\bibitem[{Zhao et~al.(2024{\natexlab{a}})Zhao, Liu, Long, Zhang, Zhao, and Cohan}]{zhao2024financemath}
+Yilun Zhao, Hongjun Liu, Yitao Long, Rui Zhang, Chen Zhao, and Arman Cohan. 2024{\natexlab{a}}.
+\newblock \href {https://arxiv.org/abs/2311.09797} {Financemath: Knowledge-intensive math reasoning in finance domains}.
+\newblock \emph{Preprint}, arXiv:2311.09797.
+
+\bibitem[{Zhao et~al.(2024{\natexlab{b}})Zhao, Long, Liu, Kamoi, Nan, Chen, Liu, Tang, Zhang, and Cohan}]{zhao2024docmatheval}
+Yilun Zhao, Yitao Long, Hongjun Liu, Ryo Kamoi, Linyong Nan, Lyuhao Chen, Yixin Liu, Xiangru Tang, Rui Zhang, and Arman Cohan. 2024{\natexlab{b}}.
+\newblock \href {https://arxiv.org/abs/2311.09805} {Docmath-eval: Evaluating math reasoning capabilities of llms in understanding long and specialized documents}.
+\newblock \emph{Preprint}, arXiv:2311.09805.
+
+\bibitem[{Zhou et~al.(2023{\natexlab{a}})Zhou, Yan, Shlapentokh-Rothman, Wang, and Wang}]{Zhou2023LanguageAT}
+Andy Zhou, Kai Yan, Michal Shlapentokh-Rothman, Haohan Wang, and Yu-Xiong Wang. 2023{\natexlab{a}}.
+\newblock \href {https://api.semanticscholar.org/CorpusID:263829963} {Language agent tree search unifies reasoning acting and planning in language models}.
+\newblock \emph{ArXiv}, abs/2310.04406.
+
+\bibitem[{Zhou et~al.(2023{\natexlab{b}})Zhou, Wang, Jin, Yao, Ye, Liu, Wang, Huang, and Huang}]{zhou2023mathattackattackinglargelanguage}
+Zihao Zhou, Qiufeng Wang, Mingyu Jin, Jie Yao, Jianan Ye, Wei Liu, Wei Wang, Xiaowei Huang, and Kaizhu Huang. 2023{\natexlab{b}}.
+\newblock \href {https://arxiv.org/abs/2309.01686} {Mathattack: Attacking large language models towards math solving ability}.
+\newblock \emph{Preprint}, arXiv:2309.01686.
+
+\end{thebibliography}

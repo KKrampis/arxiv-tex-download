@@ -1,0 +1,792 @@
+\pdfoutput=1
+
+\documentclass[11pt]{article}
+
+\usepackage[]{EMNLP2023}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{xfrac}
+\usepackage{enumitem}
+
+\usepackage[T1]{fontenc}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{microtype}
+
+\usepackage{inconsolata}
+
+\usepackage{tikz}
+\usepackage{amsmath,amsfonts,bm}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{dsfont}
+\usepackage{multirow}
+
+\newcommand{\atl}[2]{#1^{(#2)}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\usepackage{color}
+\usepackage{soul}
+\usepackage[textsize=scriptsize]{todonotes}
+\newcommand{\note}[4][]{\todo[author=#2,color=#3,size=\scriptsize,fancyline,caption={},#1]{#4}} 
+\newcommand{\alessandro}[2][]{\note[#1]{alessandro}{green!40}{#2}}
+
+\newcommand{\mrinmaya}[2][]{\note[#1]{mrinmaya}{yellow!40}{#2}}
+\newcommand{\vilem}[2][]{\note[#1]{vilem}{red!20}{#2}}
+\newcommand{\Vilem}[2][]{\vilem[inline,#1]{#2}}
+\newcommand{\vilemmaybe}[2]{\st{\textit{#1}}#2}
+\newcommand{\yb}[2][]{\note[#1]{yonatan}{red!40}{#2}}
+
+
+
+\title{
+A Mechanistic Interpretation of Arithmetic Reasoning in Language Models\\using Causal Mediation Analysis
+}
+
+\author{Alessandro Stolfo \\
+  ETH Z\"urich \\
+  \texttt{stolfoa@ethz.ch} \\\And
+  Yonatan Belinkov \\
+  Technion -- IIT, Israel \\
+  \texttt{belinkov@technion.ac.il} \\\And
+  Mrinmaya Sachan \\
+  ETH Z\"urich \\
+  \texttt{msachan@ethz.ch} \\
+  }
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Mathematical reasoning in large language models (LMs) has garnered significant attention in recent work, but there is a limited understanding of how these models process and store information related to arithmetic tasks within their architecture.
+In order to improve our understanding of this aspect of language models, we present a mechanistic interpretation of Transformer-based LMs on arithmetic questions using a causal mediation analysis framework.
+By intervening on the activations of specific model components and measuring the resulting changes in predicted probabilities, we identify the subset of parameters responsible for specific predictions.
+This provides insights into how information related to arithmetic is processed by LMs.
+Our experimental results indicate that LMs process the input by transmitting the information relevant to the query from mid-sequence early layers to the final token using the attention mechanism. Then, this information is processed by a set of MLP modules, which generate result-related information that is incorporated into the residual stream.
+To assess the specificity of the observed activation dynamics, we compare the effects of different model components on arithmetic queries with other tasks, including number retrieval from prompts and factual knowledge questions.\footnote{Our code and data is available at \url{https://github.com/alestolfo/lm-arithmetic}.}
+
+
+
+
+\end{abstract}
+
+\section{Introduction}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{img/info_flow.pdf}
+    \caption{Visualization of our findings. We trace the flow of numerical information within Transformer-based LMs: given an input query, the model processes the representations of numbers and operators with early layers (A). Then, the relevant information is conveyed by the attention mechanism to the end of the input sequence (B). Here, it is processed by late MLP modules, which output result-related information into the residual stream (C).
+    }
+    \label{fig:info_flow}
+    \vspace{-12pt}
+\end{figure}
+
+
+Mathematical reasoning with Transformer-based models \cite{vaswani2017attention} is challenging as it requires an understanding of the quantities and the mathematical concepts involved.
+While large language models (LMs) have recently achieved impressive performance on a set of math-based tasks \cite{wei2022emergent, chowdhery2022palm, openai2023gpt4}, their behavior has been shown to be inconsistent and context-dependent \cite{bubeck2023sparks}. 
+Recent literature shows a multitude of works proposing methods to improve the performance of large LMs on math benchmark datasets through enhanced pre-training \cite{spokoyny-etal-2022-masked, lewkowycz2022solving, liu2023goat} or specific prompting techniques \cite[\textit{inter alia}]{chain-of-thought, kojima2022large, yang2023large}. However, there is a limited understanding of the inner workings of these models and how they store and process information to correctly perform math-based tasks.
+Insights into the mechanics behind LMs' reasoning are key to improvements such as inference-time correction of the model's behavior \cite{li2023inferencetime} and safer deployment. Therefore, research in this direction is critical for the development of more faithful and accurate next-generation LM-based reasoning systems.
+
+In this paper, we present a set of analyses aimed at mechanistically interpreting LMs on the task of answering simple arithmetic questions (e.g., \textit{``What is the product of 11 and 17?''}).
+In particular, we hypothesize that the computations involved in reasoning about such arithmetic problems are carried out by a specific subset of the network.
+Then, we test this hypothesis by adopting a causal mediation analysis framework \cite{vig2020investigating, meng2022locating}, where the model is seen as a causal graph going from inputs to outputs, and the model components (e.g., neurons or layers) are seen as mediators \cite{pearl2001direct}. Within this framework, we assess the impact of a mediator on the observed output behavior by conducting controlled interventions on the activations of specific subsets of the model and examining the resulting changes in the probabilities assigned to different numerical predictions.
+
+
+
+Through this experimental procedure, we track the flow of information within the model and identify the model components that encode information about the result of arithmetic queries.
+Our findings show that the model processes the input by conveying information about the operator and the operands from mid-sequence early layers to the final token using attention. At this location, the information is processed by a set of MLP modules, which output result-related information into the residual stream (shown in Figure \ref{fig:info_flow}).
+We verify this finding for bi- and tri-variate arithmetic queries across four pre-trained language models with different sizes: 2.8B, 6B, and 7B parameters.
+Finally, we compare the effect of different model components on answering arithmetic questions to two additional tasks: a synthetic task that involves retrieving a number from the prompt and answering questions related to factual knowledge. This comparison validates the \textit{specificity} of the activation dynamics observed on arithmetic queries.
+
+
+
+\section{Related Work}
+
+\paragraph{Mechanistic Interpretability.}
+The objective of mechanistic interpretability is to reverse engineer model computation into components, aiming to discover, comprehend, and validate the algorithms (called circuits in certain works) implemented by the model weights \cite{rauker2023transparent}.
+Early work in this area analyzed the activation values of single neurons when generating text using LSTMs \cite{karpathy2015visualizing}.
+A multitude of studies have later focused on interpreting weights and  intermediate representations in neural networks \cite{olah2017feature, olah2018building,olah2020zoom,voss2021visualizing,goh2021multimodal} and on how information is processed by Transformer-based \cite{vaswani2017attention} language models \cite{geva-etal-2021-transformer,geva-etal-2022-transformer, geva2023dissecting, olsson2022context, nanda2023progress}.
+Although not strictly mechanistic, other recent studies have analyzed the hidden representations and behavior of inner components of large LMs \cite{belrose2023eliciting,gurnee2023finding,bills2023language}.
+
+
+\paragraph{Causality-based Interpretability.}
+Causal mediation analysis is an important tool that is used to effectively attribute the causal effect of mediators on an outcome variable \cite{pearl2001direct}.
+This paradigm was applied to investigate LMs by \citet{vig2020investigating}, who proposed a framework based on causal mediation analysis to investigate gender bias.
+Variants of this approach were later applied to mechanistically interpret the inner workings of pre-trained LMs on other tasks such as subject-verb agreement \cite{finlayson-etal-2021-causal}, natural language inference \cite{geiger2021causal}, indirect object identification \cite{wang2022interpretability}, and to study their retention of factual knowledge \cite{meng2022locating}. 
+
+\paragraph{Math and Arithmetic Reasoning.}
+A growing body of work has proposed methods to analyze the performance and robustness of large LMs on tasks involving mathematical reasoning \cite{pal-baral-2021-investigating-numeracy, piekos-etal-2021-measuring, razeghi-etal-2022-impact, cobbe2021training, mishra-etal-2022-numglue}. In this area, \citet{stolfo-etal-2023-causal} use a causally-grounded approach to quantify the robustness of large LMs. However, the proposed formulation is limited to behavioral investigation with no insights into the models' inner mechanisms.
+To the best of our knowledge, our study represents the first attempt to connect the area of mechanistic interpretability to the investigation of the mathematical reasoning abilities in Transformer-based LMs. 
+
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Background and Task}
+We denote an autoregressive language model as $\mathcal{G}: \mathcal{X} \rightarrow \mathcal{P}$. The model operates over a vocabulary $V$ and takes a token sequence $x = [x_1, ..., x_T] \in \mathcal{X}$, where each $x_i \in V$.
+$\mathcal{G}$ generates a probability distribution $\smash{\mathbb{P} \in \mathcal{P} : \mathbb{R}^{|V|} \rightarrow [0,1]}$ that predicts possible next tokens following the sequence $x$. 
+In this work, we study decoder-only Transformer-based models \cite{vaswani2017attention}. Specifically, we focus on models that represent a slight variation of the standard GPT paradigm, as they utilize parallel attention \cite{gpt-j} and rotary positional encodings \cite{su2022roformer}. The internal computation of the model's hidden states $\atl{h}{l}_t$ at position $t \in \{1, \dots, T \}$ of the input sequence is carried out as follows:
+\vspace{-2mm}
+\begin{align}
+    \label{eq:transformer}
+    \atl{h}{l}_t &= \atl{h}{l-1}_t + \atl{a}{l}_t + \atl{m}{l}_t
+     \\
+     \notag
+    \atl{a}{l}_t &= \atl{\mathrm{A}}{l}\left(\atl{h}{l-1}_1, \dots, \atl{h}{l-1}_t\right) \\
+    \notag
+    \atl{m}{l}_t &= \atl{W_{\text{proj}}}{l}\, \sigma\left(  \atl{W_{fc}}{l} \  \atl{h}{l-1}_t \right)  %
+    \\
+    \notag
+    &=:  \atl{\mathrm{MLP}}{l}(\atl{h}{l-1}_t),
+\end{align}
+\vspace{-0.4mm}
+where at layer $l$, $\sigma$ is the sigmoid nonlinearity,  $\atl{W_{fc}}{l}$ and $\atl{W_{\text{proj}}}{l}$ are two matrices that parameterize the multilayer perceptron (MLP) of the Transformer block and $\atl{\mathrm{A}}{l}$ is the attention mechanism.\footnote{For brevity, layer normalization \cite{ba2016layer} is omitted as it is not essential for our analysis.}
+
+
+We consider the task of computing the result of arithmetic operations. 
+Each arithmetic query consists of a list of operands $N = (n_1, n_2, \dots)$ and a function $f_O$ representing the application of a set of arithmetic operators $(+, -, \times, \div)$.
+We denote as $r = f_O(N)$ the result obtained by applying the operators to the operands.
+Each query is rendered as a natural language question through a prompt $p(N, f_O) \in \mathcal{X}$ such as \textit{``How much is $n_1$ plus $n_2$?''} (in this case, $f_O(n_1, n_2) = n_1 + n_2$).
+The prompt is then fed to the language model to produce a probability distribution $\mathbb{P}$ over $V$. Our aim is to investigate whether certain hidden state variables are more important than others during the process of computing the result $r$.
+
+\subsection{Experimental Procedure}
+We see the model $\mathcal{G}$ as a causal graph \cite{pearl2009causality}, framing internal model components, such as specific neurons, as mediators positioned along the causal path connecting model inputs and outputs. Following a causal mediation analysis procedure, we then quantify the contribution of particular model components by intervening on their activation values and measuring the change in the model's output.
+Previous work has isolated the effect of every single neuron within a model \cite{vig2020investigating, finlayson-etal-2021-causal}. However, this approach becomes impractical for models with billions of parameters. Therefore, for our main experiments, the elements that we consider as variables along the causal path described by the model are the outputs of the $\atl{\mathrm{MLP}}{l}$ and $\atl{\mathrm{A}}{l}$ functions at each token $t$, i.e., $\atl{m}{l}_t$ and $\atl{a}{l}_t$.
+
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.96\columnwidth]{img/main_fig.pdf}
+    \caption{By intervening on the activation values of specific components within a language model and computing the corresponding effects, we identify the subset of parameters responsible for specific predictions.}
+    \label{fig:main_fig}
+    \vspace{-0.5mm}
+\end{figure}
+
+
+To quantify the importance of modules $\atl{\mathrm{MLP}}{l}$ and $\atl{\mathrm{A}}{l}$
+in mediating the model's predictions at position $t$, we use the following procedure.
+\begin{enumerate}[left=0mm]
+    \item Given $f_O$, we sample two sets of operands $N$, $N'$, and we obtain $r = f_O(N)$ and $r' = f_O(N')$. Then, two input questions with only the operands differing, $p_1 = p(N, f_O)$ and $p_2 = p(N', f_O)$, are passed through the model.
+    \item During the forward pass with input $p_1$, we store the activation values $\atl{\bar{m}}{l}_{t} := \atl{\mathrm{MLP}}{l}(\atl{h}{l-1}_{t})$, and $\atl{\bar{a}}{l}_{t} := \atl{\mathrm{A}}{l}(\atl{h}{l-1}_{1}, \dots, \atl{h}{l-1}_{t})$ .
+    \item We perform an additional forward pass using $p_2$, but this time we \textit{intervene} on components $\atl{\mathrm{MLP}}{l}$ and $\atl{\mathrm{A}}{l}$ at position $t$, setting their activation values to $\atl{\bar{m}}{l}_{t}$, and $\atl{\bar{a}}{l}_{t}$, respectively. This process is illustrated in Figure \ref{fig:main_fig}.
+    \item We measure the causal effect of the intervention on variables $\atl{m}{l}_{t}$ and $\atl{a}{l}_{t}$ on the model's prediction by computing the change in the probability values assigned to the results $r$ and $r'$.
+    \label{step:compute_eff}
+\end{enumerate}
+
+More specifically, we compute the \textbf{indirect effect} (IE) of a specific mediating component by quantifying its contribution in skewing $\mathbb{P}$ towards the correct result.
+Consider a generic activation variable $z \in \{\atl{m}{1}_{1}, \dots, \atl{m}{L}_{t}, \atl{a}{1}_{1}, \dots, \atl{a}{L}_{t} \}$.
+We denote the model's output probability following an intervention on $z$ as $\mathbb{P}_{z}^*$.
+Then, we compute the IE as:
+\begin{align}
+    \label{eq:ie}
+    \hspace{-2mm}\mathrm{IE}(z)=\frac{1}{2} \bigg[ \frac{\mathbb{P}_z^*(r) - \mathbb{P}(r)}{\mathbb{P}(r)} + \frac{\mathbb{P}(r') - \mathbb{P}_z^*(r')}{\mathbb{P}_z^*(r')} \bigg] \hspace{-1mm}
+\end{align}
+where the two terms in the sum represent the relative change in the probability assigned by the model to $r$ and $r'$, caused by the intervention performed. The larger the measured IE, the larger the contribution of component $z$ in shifting probability mass from the clean-run result $r'$ to result $r$ corresponding to the alternative input $p_1$.\footnote{As an alternative metric to quantify the IE, we experiment using the difference in log probabilities (Appendix \ref{sec:logprob}). The results obtained with the two metrics show consistency and lead to the same conclusions.}
+
+We additionally measure the mediation effect of each component with respect to the operation $f_O$. We achieve this by fixing the operands and changing the operator across the two input prompts. More formally, in step 1, we sample a list of operands $N$ and two operators $f_O$ and $f_O'$. Then, we generate two prompts $p_1 = p(N, f_O)$ and $p_2 = p(N, f_O')$ (e.g., ``\textit{What is the sum of 11 and 7?}'' and ``\textit{What is the product of 11 and 7?}''). Finally, we carry out the procedure in steps 2--4.
+
+
+\subsection{Experimental Setup}
+We present the results of our analyses in the main paper for GPT-J \cite{gpt-j}, a 6B-parameter pre-trained LM \cite{gao2020pile}. Additionally, we validate our findings on Pythia 2.8B \cite{biderman2023pythia}, LLaMA 7B \cite{touvron2023llama}, and Goat, a version of LLaMA fine-tuned on arithmetic tasks \cite{liu2023goat}. We report the detailed results for these models in Appendix \ref{sec:additional_res}.
+
+In our experiments, we focus on two- and three-operand arithmetic problems.
+Similar to previous work \cite{razeghi-etal-2022-impact, karpas2022mrkl}, for single-operator two-operand queries, we use a set of six diverse templates representing a question involving each of the four arithmetic operators. For the three-operand queries, we use one template for each of the 29 possible two-operator combinations. Details about the templates are reported in Appendix \ref{sec:prompts}.
+In the bi-variate case, for each of the four operators $f_O \in \{+, -, \times, \div\}$ and for each of the templates, we generate 50 pairs of prompts by sampling two pairs of operands $(n_1, n_2) \in \mathcal{S}^2$ and $(n_1', n_2') \in \mathcal{S}^2$, where $\mathcal{S} \subset V \cap \mathbb{N}$. For the operand-related experiment, we sample $(n_1, n_2)$ and a second operation $f_O'$. In both cases, we ensure that the result $r$ falls within $\mathcal{S}$.\footnote{Unless otherwise specified, we use $\mathcal{S} = \{1,2,\dots, 300 \}$, as larger integers get split into multiple tokens by the tokenizer.}
+In the three-operand case, we generate 15 pairs of prompts for each of the 29 templates, following the same procedure.
+In order to ensure that the model achieves a meaningful task performance, we use a two-shot prompt in which we include two exemplars of question-answer for the same operation that is being queried. We report the accuracy results in Appendix \ref{appendix:accuracy}.
+
+
+
+
+
+
+
+
+
+\section{Causal Effects on Arithmetic Queries}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{img/main_res.pdf}
+    \caption{Indirect effect (IE) measured within GPT-J. Figures (a) and (b) illustrate the flow of information related to both the operands and the result of the queries, while the effect displayed in Figures (c) and (d) is related to the operands only (the result is kept unchanged). Figures (e--h) show a re-scaled visualization of the effects at the last token for each of the four heatmaps (a--d). The difference in the effect registered for the MLPs at layers 15--25 between figures (a) and (c) illustrates the role of these components in producing result-related information.}
+    \label{fig:j-heatmaps}
+\end{figure*}
+
+Our analyses address the following question:
+\begin{description}
+    \item[Q1] What are the components of the model that mediate predictions involving arithmetic computations?
+\end{description}
+We address this question by first studying the flow of information throughout the model by measuring the effect of each component (MLP and attention block) at each point of the input sequence for two-operand queries (\S \ref{sec:int1}). Then, we distinguish between model components that carry information about the result and about the operands of the arithmetic computations (\S \ref{sec:undesired} and \S\ref{sec:last_token}). Finally, we consider queries involving three operands (\S \ref{sec:3-ops}) and present a measure to quantify the changes in information flow (\S \ref{sec:quantify}).
+
+
+
+\subsection{Tracing the Information Flow}
+\label{sec:int1}
+We measure the indirect effect of each MLP and attention block at different positions along the input sequence. The output of these modules can be seen as new information being incorporated into the residual stream. This new information can be produced at any point of the sequence and then conveyed to the end of the sequence for the prediction of the next token.
+By studying the IE at different locations within the model, we can identify the modules that generate new information relevant to the model's prediction.
+The results are reported in Figures \ref{fig:j-heatmaps}a and \ref{fig:j-heatmaps}b for MLP and attention, respectively.
+
+Our analysis reveals four primary activation sites:
+the MLP module situated at the first layer corresponding to the tokens of the two operands; the intermediate attention blocks at the last token of the sequence; and the MLP modules in the middle-to-late layers, also located at the last token of the sequence.
+It is expected to observe a high effect for the first MLPs associated with the tokens that vary (i.e., the operands), as such modules are likely to affect the representation of the tokens, which is subsequently used for the next token prediction.
+On the other hand, of particular interest is the high effect detected at the attention modules in layers 11--18 and in the MLPs around layer 20.
+
+As for the flow of information tied to the operator, the activations display a parallel pattern: high effect is registered at early MLPs associated with the operator tokens and at the same last-token MLP and attention locations. We report the visualization of the operator-related results in Appendix \ref{appendix:operator}.
+
+A possible explanation of the model's behavior on this task is that the attention mechanism facilitates the propagation of operand- and operator-related information from the first layers early in the sequence to the last token. Here, this information is processed by the MLP modules, which incorporate the information about the result of the computation in the residual stream.
+This hypothesis aligns with the existing theory that attributes the responsibility of moving and extracting information within Transformer-based models to the attention mechanism \cite{elhage2021mathematical, geva2023dissecting}, while the feed-forward layers are associated with performing computations, retrieving facts and information \cite{geva-etal-2022-transformer, din2023jump, meng2022locating}.
+We test the validity of this hypothesis in the following section.
+
+
+\subsection{Operand- and Result-related Effects}
+\label{sec:undesired}
+
+
+
+
+
+
+Our objective is to verify whether the contribution to the model's prediction of each component measured in Figures \ref{fig:j-heatmaps}a and \ref{fig:j-heatmaps}b is due to (\emph{1}) the component representing information related to the operands, or (\emph{2}) the component encoding information about the result of the computation. 
+To this end, we formulate a variant of our previous experimental procedure. In particular, we condition the sampling of the second pair of operands $(n_1', n_2')$ on the constraint $r = r'$. That is, we generate the two input questions $p_1$ and $p_2$, such that their result is the same (e.g., ``\textit{What is the sum of 25 and 7?}'' and ``\textit{What is the sum of 14 and 18?}'').
+In case number (\emph{1}), we would expect a component to have high IE both in the result-varying setting and when $r = r'$, as the operands are modified in both scenarios. In case  (\emph{2}), we expect a subset of the model to have a large effect when the operands are sampled without constraints but a low effect for the fixed-result setting.
+
+We report the results in Figure \ref{fig:j-heatmaps}c and \ref{fig:j-heatmaps}d. By comparing Figures \ref{fig:j-heatmaps}a and \ref{fig:j-heatmaps}c, two notable observations emerge. First, the high effect in the early layers corresponding to the operand tokens is observed in both the result-preserving and the result-varying scenarios. Second, the last-token mid-late MLPs that lead to a high effect on the model's prediction following a result change, dramatically decrease their effect on the model's output in the result-preserving setting, as described in scenario (\emph{2}). These observations point to the conclusion that the MLP blocks around layer 20 incorporate result-relevant information.
+As for the contribution of the attention mechanism (Figures \ref{fig:j-heatmaps}b and \ref{fig:j-heatmaps}d), we do not observe a substantial difference in the layers with the highest IE between the two settings, which aligns this scenario to the description of case (\emph{1}).
+These results are consistent with our hypothesis that operand-related information is transferred by the attention mechanism to the end of the sequence and then processed by the MLPs to obtain the result of the computation.
+
+
+
+
+\subsection{Zooming in on the Last Token}
+\label{sec:last_token}
+In Figures \ref{fig:j-heatmaps}e--\ref{fig:j-heatmaps}h, we show a re-scaled version of the IE measurements for the layers at the end of the input sequence. While the large difference in magnitude was already evident in the previously considered visualizations, in Figures \ref{fig:j-heatmaps}e and \ref{fig:j-heatmaps}f we notice that the MLPs with the highest effect in the two settings differ: the main contribution to the model's output when the results are not fixed is given by layers 19 and 20, while in the result-preserving setting the effect is largest at layers 14-18. For the attention (Figures \ref{fig:j-heatmaps}g and \ref{fig:j-heatmaps}h), we do not observe a significant change in the shape of the curve describing the IE across different layers, with layer 13 producing the largest contribution. 
+We interpret this as additional evidence indicating that the last-token MLPs at layers 19-20 encode information about $r$, while the attention modules carry information related to the operands.
+ 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{img/pythia/3ops/pythia-3ops-mlp.pdf}
+    \includegraphics[width=\columnwidth]{img/pythia/3ops/pythia-ft-3ops-mlp.pdf}
+    \caption{Indirect effect (IE) on three-operand queries for different MLP modules in Pythia 2.8B before and after fine-tuning. %
+    The effect produced by the last-token mid-late MLP activation site emerges with fine-tuning.
+    Results for the attention are reported in Appendix \ref{sec:additional_res}.}
+    \label{fig:3-ops}
+\end{figure}
+
+
+\subsection{Three-operand Queries \& Fine-tuning}
+\label{sec:3-ops}
+We extend our analyses by including three-operand arithmetic queries such as ``\textit{What is the difference between $n_1$ and the ratio between $n_2$ and $n_3$?}''. Answering correctly this type of questions represents a challenging task for pre-trained language models, and we observe poor accuracy (below 10\%) with GPT-J. Thus, we opt for fine-tuning the model on a small set of three-operand queries. 
+The model that we consider for this analysis is Pythia 2.8B, as its smaller size allows for less computationally demanding training than the 6B-parameter GPT-J. After fine-tuning, the model attains an accuracy of $\sim$40\%. We provide the details about the training procedure in Appendix \ref{appendix:finetuning}.
+
+We carry out the experimental procedure as in Section \ref{sec:int1}. In particular, we compare the information flow in the MLPs of the model before and after fine-tuning (Figure \ref{fig:3-ops}). In the non-fine-tuned version of the model, the only relevant activation site, besides the early layers at the operand tokens, is the very last layer at the last token.
+In the fine-tuned model, on the other hand, we notice the emergence of the mid-late MLP activation site that was previously observed in the two-operand setting. 
+
+
+\subsection{Quantifying the Change of the Information Flow}
+\label{sec:quantify}
+Denote the set of MLPs in the model by $\mathcal{M}$. We define the relative importance (RI) of a specific subset $\mathcal{M}^* \subseteq \mathcal{M}$ of MLP modules as
+\begin{align}
+    \label{eq:effect_ratio}
+    \mathrm{RI}(\mathcal{M}^*) = \frac{\sum_{m \in \mathcal{M}^*} \log(\mathrm{IE}(m) + 1)}{\sum_{m \in \mathcal{M}} \log(\mathrm{IE}(m) + 1)}.
+\end{align}
+In order to quantitatively show the difference in the activation sites observed in Figure \ref{fig:j-heatmaps}, we compute the RI measure for the set
+\begin{align}
+    \notag
+    \mathcal{M}_{-1}^{\text{late}} = \{\atl{m}{\floor*{L/2}}_{-1},\atl{m}{\floor*{L/2}+1}_{-1}, \dots, \atl{m}{L}_{-1} \},
+\end{align}
+where the subscript $-1$ indicates the last token of the input sequence and $L$ is the number of layers in the model. 
+This quantity represents the relative contribution of the mid-late last-token MLPs compared to all the MLP blocks in the model.
+
+
+
+For the two-operand setting, we carry out the experimental procedure described in Section \ref{sec:methodology} for three additional models: Pythia 2.8B, LLaMA 7B, and Goat.\footnote{The LLaMA tokenizer considers each digit as an independent token in the vocabulary. This makes it problematic to compare the probability value assigned by the model to multi-digit numbers. Therefore, we restrict the set of possible results to the set of single-digit numbers.}
+Furthermore, we repeat the analyses on GPT-J using a different number representation: instead of Arabic numbers (e.g., the token \textit{2}), we represent quantities using numeral words (e.g., the token \textit{two}).
+For the three-operand setting, we report the results for Pythia 2.8B before and after fine-tuning.
+We measure the effects using both randomly sampled and result-preserving operand pairs, comparing the RI measure in the two settings. The results (Table \ref{table:effects}) exhibit consistency across all these four additional experiments. These quantitative measurements further highlight the influence of last-token late MLP modules on the prediction of $r$. We provide in Appendix \ref{sec:additional_res} the heatmap illustrations of the effects for these additional studies. 
+
+\begin{table}\small
+    \resizebox{\columnwidth}{!}{
+    \begin{tabularx}{\columnwidth}{c l c c }
+    \toprule[0.1em]
+     \multirow{2}{*}{$\bm{|N|}$} & \multirow{2}{*}{\textbf{Model}} & \multirow{2}{*}{$\bm{\mathrm{RI}(\mathcal{M}_{-1}^{\textbf{late}})}$} &  $\bm{\mathrm{RI}(\mathcal{M}_{-1}^{\textbf{late}})}$  \\
+     & & & \textbf{Result Fixed} \\
+    \midrule
+    \multirow{5}{*}{2} & GPT-J & 40.2\%  & 4.4\% \\
+    & Pythia 2.8B & 43.2\% & 5.8\% \\
+    & LLaMA 7B & 36.1\% & 7.5\% \\
+    & Goat & 33.5\% & 7.4\% \\
+    & GPT-J (Words) & 27.8\% & 4.5\% \\
+    \midrule
+    \multirow{2}{*}{3} & Pythia 2.8B & 13.5\% & 6.7\% \\
+     & Pythia 2.8B (FT) & 24.7\% & 13.6\% \\
+ \bottomrule[0.1em]
+\end{tabularx}
+}
+    \caption{Relative importance (RI) measurements for the last-token late MLP activation site. The decrease in the RI observed when fixing the result of the two pairs of operands used for the interventions quantitatively confirms the role of this subset of the model in incorporating result-related information.}
+    \label{table:effects}
+\end{table}
+
+
+
+
+
+
+\section{Causal Effects on Different Tasks}
+In order to understand whether the patterns in the effect of the model components that we observed so far are specific to arithmetic queries, we compare our observations on arithmetic queries to two different tasks: the retrieval of a number from the prompt (\S \ref{sec:int11}), and the prediction of factual knowledge (\S \ref{sec:factual_knowledge}).
+With this additional set of experiments, we aim to answer the question:
+\begin{description}
+    \item[Q2] Are the activation patterns observed so far \textit{specific} to the arithmetic setting?
+\end{description}
+
+
+
+\subsection{Information Flow on Number Retrieval}
+\label{sec:int11}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{img/j/j-mlp-int11.pdf}
+    \caption{Indirect effect measured on the MLPs of GPT-J for predictions on the number retrieval task.}
+    \label{fig:int11}
+\end{figure}
+We consider a simple synthetic task involving numerical predictions. We construct a set of templates of the form ``\textit{Paul has $n_1$ $e_1$ and $n_2$ $e_2$. How many $e_q$ does Paul have?}'', where $n_1$, $n_2$ are two randomly sampled numbers, $e_1$ and $e_2$ are two entity names sampled at random,\footnote{We sample entities from a list containing names of animals, fruits, office tools, and other everyday items and objects.} and $e_q \in \{ e_1, e_2\}$. In this case, the two input prompts $p_1$ and $p_2$ differ solely in the value of $e_q$. To provide the correct answer to a query, the model has simply to \textit{retrieve} the correct number from the prompt. With this task, we aim to analyze the model's behavior in a setting involving numerical predictions but not requiring any kind of arithmetic computation.
+
+We report the indirect effect measured for the MLPs modules of GPT-J in Figure \ref{fig:int11}. In this setting, we observe an unsurprising high-effect activation site corresponding to the tokens of the entity $e_q$ and a lower-effect site at the end of the input in layers 14--20. The latter site appears in the set of the model components that were shown to be active on arithmetic queries. However, computing  the relative importance of the late MLPs on this task shows that this second activation site is responsible for only $\mathrm{RI}(\mathcal{M}_{-1}^{\text{late}}) =8.7$\% of the overall  $\log \mathrm{IE}$. 
+The low RI, compared to the higher values measured on arithmetic queries, suggests that the function of the last-token late MLPs is not dictated by the numerical type of prediction, but rather by their involvement in \textit{processing} the input information. This finding is aligned with our theory that sees $\smash{\mathcal{M}_{-1}^{\text{late}}}$ as the location where information about $r$ is included in the residual stream.
+
+
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{img/j/j-lama-mlp.pdf}
+    \caption{Indirect effect measured on the MLPs of GPT-J for predictions to factual queries.}
+    \label{fig:lama}
+\end{figure}
+
+
+\subsection{Information Flow on Factual Predictions}
+\label{sec:factual_knowledge}
+
+We carry out our experimental procedure using data from the LAMA benchmark \cite{petroni-etal-2019-language}, which consists of natural language templates representing knowledge-base relations, such as \textit{``}[subject]\textit{ is the capital of }[object]\textit{''}. By instantiating a template with a specific subject (e.g., \textit{``Paris''}), we prompt the model to predict the correct object (\textit{``France''}). Similar to our approach with arithmetic questions, we create pairs of factual queries that differ solely in the subject.
+In particular, we sample pairs of entities from the set of entities compatible for a given relation (e.g., cities for the relation ``is the capital of''). Details about the data used for this procedure are provided in Appendix \ref{appendix:lama_details}. 
+We then measure the indirect effect following the formulation in Equation \ref{eq:ie}, where the correct object corresponds to the correct numerical outcome in the arithmetic scenario.
+
+
+
+From the results (Figure \ref{fig:lama}), we notice that a main activation site emerges in early layers at the tokens corresponding to the subject of the query.
+These findings are consistent with previous works \cite{meng2022locating, geva2023dissecting}, which hypothesize that language models store and retrieve factual associations in early MLPs located at the subject tokens.
+We compute the RI metric for the late MLP modules, which quantitatively validates the contribution of the early MLP activation site by attaining a low value of $\mathrm{RI}(\mathcal{M}_{-1}^{\text{late}}) =4.2$\%.
+The large IE observed at mid-sequence early MLPs represents a difference in the information flow with respect to the arithmetic scenario, where the modules with the highest influence on the model's prediction are located at the end of the sequence. This difference serves as additional evidence highlighting the specificity of the model's activation patterns when answering arithmetic queries.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Neuron-level Interventions}
+The experimental results in Sections \ref{sec:int11} and \ref{sec:factual_knowledge} showed a quantitative difference in the contributions of last-token mid-late MLPs between arithmetic queries and two tasks that do not involve arithmetic computation. Now, we investigate whether the components active \textit{within} $\mathcal{M}_{-1}^{\text{late}}$ on the different types of tasks are different.
+We carry out a finer-grained analysis in which 
+we consider independently each neuron in an MLP module (i.e., each dimension in the output vector of the function $\atl{\mathrm{MLP}}{l}$) at a specific layer $l$.
+In particular, following the same procedure as for layer-level experiments, we intervene on each neuron by setting its activation to the value it would take if the input query contained different operands (or a different entity). We then compute the corresponding indirect effect as in Eq. \ref{eq:ie}.
+We carry out this procedure for arithmetic queries using Arabic numerals (Ar) and numeral words (W), for the number retrieval task (NR), and for factual knowledge queries (F).\footnote{ 
+To have the same result space for all the arithmetic queries (Ar and NW) and for the number retrieval task, we restrict the set $\mathcal{S}$ to $\{1, \dots, 20\}$ (or the corresponding numeral words).}
+We rank the neurons according to the average effect measured for each of these four settings and compute the overlap in the top 400 neurons (roughly 10\%, as GPT-J has a hidden dimension of 4096).
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{img/neuron_overlap.pdf}
+    \vspace{-1mm}
+    \caption{Overlap ratio in the top 400 neurons with the largest effect on predicting answers to factual queries involving Arabic Numerals (Ar) and numeral words (W), number retrieval (NR), and factual knowledge (F). The results are obtained with GPT-J.}
+    \label{fig:neurons}
+\end{figure}
+We carry out this procedure for layer $l=19$, as it exhibits the largest IE within $\mathcal{M}_{-1}^{\text{late}}$ on all the tasks considered. The heatmap in Figure \ref{fig:neurons} illustrates the results. 
+We observe a consistent overlap (50\%) between the top neurons active for the arithmetic queries using Arabic and word-based representations. 
+Interestingly,  the size of the neuron overlap between arithmetic queries and number retrieval is considerably lower (22\% and 23\%), even though both tasks involve the prediction of numerical quantities.
+Finally, the  overlaps between the top neurons for the arithmetic operations and the factual predictions (between 9\% and 10\%) are not larger than for random rankings: the expected overlap ratio between the top 400 indices in two random rankings of size 4096 is 9.8\% \cite{antverg2022on}.
+These results support the hypothesis that the model's circuits responsible for different kinds of prediction, though possibly relying on similar subsets of layers, are distinct. However, it is important to note that this measurement does not take into account the magnitude of the effect.
+
+
+\section{Conclusion}
+We proposed the use of causal mediation analysis to mechanistically investigate how LMs process information related to arithmetic.
+Through controlled interventions on specific subsets of the model, we assessed the impact of these mediators on the model's predictions.
+
+We posited that models produce predictions to arithmetic queries by conveying the math-relevant information from the mid-sequence early layers to the last token, where this information is then processed by late MLP modules.
+We carried out a causality-grounded experimental procedure on four different Transformer-based LMs, and we provided empirical evidence supporting our hypothesis. Furthermore, we showed that the information flow we observed in our experiments is specific to arithmetic queries, compared to two other tasks that do not involve arithmetic computation.
+
+Our findings suggest potential avenues for research into model pruning and more targeted training/fine-tuning by concentrating on specific model components associated with certain queries or computations.
+Moreover, our results offer insights that may guide further studies into using LMs' hidden representations to correct the model's behavior on math-based tasks at inference time \cite{li2023inferencetime} and to estimate the probability of the model's predictions to be true \cite{burns2023discovering}.
+
+
+
+
+\section*{Limitations}
+
+
+
+The scope of our work is investigating arithmetic reasoning and we experiment with the four fundamental arithmetic operators. Addition, subtraction, multiplication, and division form the cornerstone of arithmetic calculations and serve as the basis for a wide range of mathematical computations. Thus, exploring their mechanisms in language models provides a starting point to explore more complex forms of mathematical processing. Studying a broader set of mathematical operators represents an interesting avenue for further investigation.
+
+Our work focuses on synthetically-generated queries that are derived from natural language descriptions of the four basic arithmetic operators. To broaden the scope, future research can expand the analysis of model activations to encompass math-based queries described in real-life settings, such as math word problems. 
+
+
+
+Finally, a limitation of our work concerns the analysis of different attention heads. In our experiments, we consider the output of an attention module as a whole. Future research could focus on identifying the specific heads that are responsible for forwarding particular types of information in order to offer a more detailed understanding of their individual contributions.
+
+\section*{Acknowledgments}
+AS is supported by armasuisse Science and Technology through a CYD Doctoral Fellowship. 
+YB is supported by an AI Alignment grant from Open Philanthropy, the Israel Science Foundation (grant No. 448/20), and an Azrieli Foundation Early Career Faculty Fellowship.
+MS acknowledges support from the Swiss National Science Foundation (Project No. 197155), a Responsible AI grant by the Haslerstiftung, and an ETH Grant (ETH-19 21-1).
+We are grateful to Vilém Zouhar and Neel Nanda for the insightful discussions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\bibliography{bibliography/anthology,bibliography/refs_this_paper, bibliography/refs_causality}
+\bibliographystyle{acl_natbib}
+
+\clearpage
+
+\appendix
+
+
+ \begin{table*}[t]
+\small 
+    \centering
+    \begin{tabular}{c ll}
+    \toprule
+    \textbf{Type} & \multicolumn{1}{c}{\bf addition} & \multicolumn{1}{c}{\bf subtraction}   \\ 
+    \midrule
+    1 & Q: How much is $n_1$ plus $n_2$? A: & Q: How much is $n_1$ minus $n_2$? A: \\
+    2 & Q: What is $n_1$ plus $n_2$? A: & Q: What is $n_1$ minus $n_2$? A:  \\
+    3 & Q: What is the result of $n_1$ plus $n_2$? A: & Q: What is the result of $n_1$ minus $n_2$? \\ 
+    3 & Q: What is the sum of $n_1$ and $n_2$? A: & Q: What is the difference between A: $n_1$ and $n_2$? A:\\ 
+    5 & The sum of $n_1$ and $n_2$ is & The difference between $n_1$ and $n_2$ is \\
+    6 & $n_1$ + $n_2$ = & $n_1$ - $n_2$ = \\
+    \midrule 
+    & \multicolumn{1}{c}{\bf multiplication}  & \multicolumn{1}{c}{\bf division} \\ 
+    \midrule
+    1 & Q: How much is $n_1$ times $n_2$? A: & Q: How much is $n_1$ over $n_2$? A: \\ 
+    2 & Q: What is $n_1$ times $n_2$? A: & Q: What is $n_1$ over $n_2$? A: \\  
+    3 & Q: What is the result of $n_1$ times $n_2$? A: & Q: What is the result of $n_1$ over $n_2$? A: \\  
+    4 & Q: What is the product of $n_1$ and $n_2$? A: & Q: What is the ratio between $n_1$ and $n_2$? A: \\  
+    5 & The product of $n_1$ and $n_2$ is & The ratio of $n_1$ and $n_2$ is \\
+    6 & $n_1$ * $n_2$ = & $n_1$ / $n_2$ =\\
+    \bottomrule
+    \end{tabular}
+    \caption{Question templates for two-operand arithmetic queries.}
+    \label{table:templates}
+\end{table*}
+
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{img/j/j-int3-mlp.pdf}
+    \includegraphics[width=0.9\columnwidth]{img/j/j-int3-attn.pdf}
+    \caption{Indirect effect (IE) measured in GPT-J when varying the word describing the operator involved in the input query. Similar to the operands case, we observe a high contribution produced by middle-to-late MLP modules at the end of the input sequence.}
+    \label{fig:operator}
+\end{figure}
+
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{img/j/operations.pdf}
+    \caption{Indirect effect of the MLPs at the last token in each layer in GPT-J, for each of the four arithmetic operators. We observe a peak in the effect at layer 19 for all four types of operation.}
+    \label{fig:gptj-int1}
+\end{figure}
+
+\section{Prompt Templates}
+\label{sec:prompts}
+In Tables \ref{table:templates} and \ref{table:templates-3-ops}, we report the question templates from \citet{karpas2022mrkl}, which we used as prompts for the model for two- and three-operand queries, respectively. For three-operand queries, we use one query template for each of the 29 possible two-operation combinations.  %
+
+
+
+
+\begin{table*}[ht]\small
+    \centering
+    \begin{tabular}{ l l }
+    \toprule
+        \textbf{Formula} &  \textbf{Template} \\ 
+        \midrule
+        ($n_1$+$n_2$)*$n_3$ & Sum $n_1$ and $n_2$ and multiply by $n_3$ \\ 
+        $n_1$+$n_2$*$n_3$ & What is the sum of $n_1$ and the product of $n_2$ and $n_3$? \\ 
+        ($n_1$-$n_2$)*$n_3$ & What is the product of $n_1$ minus $n_2$ and $n_3$? \\ 
+        $n_1$/($n_2$/$n_3$) & How much is $n_1$ divided by the ratio between $n_2$ and $n_3$? \\ 
+        $n_1$-$n_2$*$n_3$ & What is the difference between $n_1$ and the product of $n_2$ and $n_3$? \\ 
+        $n_1$*($n_2$-$n_3$) & How much is $n_1$ times the difference between $n_2$ and $n_3$? \\ 
+        \bottomrule
+    \end{tabular}
+    	\caption{Examples of templates of three-operand queries. For the full list, we refer to \citet{karpas2022mrkl}.} \label{table:templates-3-ops}
+\end{table*}
+
+\section{Performance of the Models}
+\label{appendix:accuracy}
+In Table \ref{table:accuracy}, we report the accuracy of the models on the arithmetic queries that we use for our analyses. The higher accuracy obtained using numeral words is likely given by the smaller set of possible solutions considered (we used  $\mathcal{S} = \{$\textit{``one''}, \textit{``two''}, $\dots,$ \textit{``twenty''}$ \}$, as the numeral words corresponding to larger numbers get split into multiple tokens by the tokenizer). The accuracy of GPT-J on the factual queries from the LAMA benchmark is 65.0\% (we constrain the vocabulary to the set of all possible objects for all the relations considered). On the synthetic number retrieval task, GPT-J's accuracy is 86.7\%.
+
+
+\begin{table}\small
+    \resizebox{\columnwidth}{!}{
+    \begin{tabularx}{\columnwidth}{l c c }
+    \toprule[0.1em]
+    \textbf{Model} & \textbf{Operation} & \textbf{Accuracy (\%)}  \\
+    \midrule
+    \multirow{5}{*}{GPT-J} &
+     $+$ & 69.3 \\
+     & $-$ & 78.0 \\
+     & $\times$ & 82.8 \\
+     & $\div$ & 40.8 \\
+     & Overall & 67.8 \\
+    \midrule
+    \multirow{5}{*}{GPT-J (Numeral Words)} &
+     $+$ & 95.5 \\
+     & $-$ & 86.7 \\
+     & $\times$ & 83.3 \\
+     & $\div$ & 59.7 \\
+     & Overall & 81.3 \\
+     \midrule
+    \multirow{5}{*}{Pythia 2.8B} &
+     $+$ & 57.4 \\
+     & $-$ & 77.5 \\
+     & $\times$ & 64.7 \\
+     & $\div$ & 40.2 \\
+     & Overall & 59.9 \\
+     \midrule
+    \multirow{5}{*}{LLaMA} &
+     $+$ & 100.0 \\
+     & $-$ & 99.8 \\
+     & $\times$ & 100.0 \\
+     & $\div$ & 88.7 \\
+     & Overall & 97.2 \\
+     \midrule
+        \multirow{5}{*}{Goat} &
+     $+$ & 100.0 \\
+     & $-$ & 100.0 \\
+     & $\times$ & 91.4 \\
+     & $\div$ & 54.0 \\
+     & Overall & 85.6 \\
+     \midrule
+     Pythia 2.8B (3 Operands) & Overall & 0.9 \\
+     \midrule
+     Pythia 2.8B Fine-tuned & \multirow{2}{*}{Overall} & \multirow{2}{*}{39.7} \\
+     (3 Operands) & & \\
+ \bottomrule[0.1em]
+\end{tabularx}
+}
+    \caption{Accuracy of the models analyzed in the paper on various types of arithmetic queries.}
+    \label{table:accuracy}
+\end{table}
+
+
+
+
+
+\section{Flow of Operator-related Information}
+\label{appendix:operator}
+The measurements of the indirect effect for each model component when fixing the operand and varying the operator in the two input prompts $p_1$ and $p_2$ reveal how the model processes the information related to the operator. We report in Figure \ref{fig:operator} the heatmap visualizations of these results for two-operand queries. Similar to the operand-related information, we observe a high effect in three activation locations: early MLP blocks corresponding to the operand tokens; middle-to-early attention modules at the last token; and middle-to-late MLP modules at the last token. These results align with our hypothesis that arithmetic-related information is transferred to the end of the sequence by the attention mechanism, where it is then processed by late MLP layers. In this setting, we measure $\mathrm{RI}(\mathcal{M}_{-1}^{\textbf{late}}) =$31.4\%.
+
+
+
+\section{Effects for Each Operator}
+For each of the four operators, we report the indirect effect measured for the last-token MLP modules in GPT-J in Figure \ref{fig:gptj-int1}. The results for each of the four operators show a common spike in the effect at layers 19-20. This indicates the presence of a specific part of the model relevant to the numerical predictions of the bi-variate arithmetic questions, irrespective of the operator involved.
+We also notice a difference in the magnitude of the effects, which is linked to the capability of the model to correctly answer the query.
+
+\section{Changes in the Model's Prediction}
+\label{appendix:cp}
+We measured the influence of the model components in terms of probability changes. Now, we study the dynamics of the actual model predictions.
+In particular, considering the scenario in which $r = r'$, we verify whether the intervention leads to a change in the model's prediction. That is, we compute
+\begin{align}
+    \label{eq:cp}
+    \mathds{1} \{\argmax_{x \in \mathcal{S}} \mathbb{P}_z^*(x) \neq  \argmax_{x \in \mathcal{S}} \mathbb{P}(x)   \},
+\end{align}
+distinguishing between desired ($\argmax_{x \in \mathcal{S}} \mathbb{P}_*(x) = r$) and undesired ($\argmax_{x \in \mathcal{S}} \mathbb{P}(x) = r$) changes.
+The results reported in Figure \ref{fig:cp} show an increase in the desired change in prediction at layers 19-20, while the undesired change in prediction is higher for layers 14-17. This means that interventions on the MLPs at layers 19-20 are more likely to lead to a correct adjustment of the prediction, while the opposite is true for earlier layers (14-15 in particular). This finding is consistent with our previous observations and we see this as additional evidence highlighting the influence of the MLPs at layers 19-20 on the prediction of $r$.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{img/desired_cp.pdf}
+    \includegraphics[width=0.9\columnwidth]{img/undesired_cp.pdf}
+    \caption{Desired (wrong to correct) and undesired (correct to wrong) change in the prediction induced by the intervention on the MLPs in GPT-J. The layers at which the two types of prediction change peak correspond to the layers with the largest corresponding IE.}
+    \label{fig:cp}
+\end{figure}
+
+
+
+\section{Fine-tuning Details}
+\label{appendix:finetuning}
+We fine-tune Pythia 2.8B on three-operand queries. We train the model for 2 epochs on a set of queries obtained by sampling 1000 triples of operands for each of the 29 templates. We use Adafactor \cite{shazeer2018adafactor} a learning rate of 10$^{-5}$, linearly decaying, and a batch size of 8. We make sure that there is no overlap between the set of queries used for training and the set used for the computation of the indirect effect.
+
+\section{Computing Infrastructure}
+The experiments for all models are carried out using a single Nvidia A100 GPU with 80GB of memory. The computation of the indirect effect across the whole model for a single type of component (attention or MLP) took $\sim$15 hours for GPT-J and $\sim$6 hours for Pythia (using 50 examples for each two-operand template) and $\sim$7 hours for LLaMA and Goat (using 20 examples for each two-operand template).
+For the fine-tuning of Pythia 2.8B, we used a single Nvidia A100 GPU with 80GB of memory. The training procedure took $\sim$1 hour.
+Experiment tracking was carried out using Weights \& Biases.\footnote{\url{http://wandb.ai}}
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{img/j/j-attn-int11.pdf}
+    \caption{Indirect effect (IE) measured for the attention modules in GPT-J on the task of number retrieval.}
+    \label{fig:j-int11-attn}
+\end{figure}
+
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{img/j/j-lama-attn.pdf}
+    \caption{Indirect effect (IE) measured for the attention modules in GPT-J on factual knowledge queries.}
+    \label{fig:j-lama-attn}
+\end{figure}
+
+
+\section{Factual Knowledge Data}
+\label{appendix:lama_details}
+For the experiments involving the prediction of factual knowledge, we use the following six relations from the T-REx subset of the LAMA benchmark \cite{petroni-etal-2019-language}:
+\begin{enumerate}
+    \item ``[subject] is the capital of [object]''
+    \item  ``[subject] was born in [object]''
+    \item ``[subject] died in [object]''
+    \item ``The native language of [subject] is [object]''
+    \item ``[subject] is a subclass of [object]''
+    \item ``The capital of [subject] is [object]''.
+\end{enumerate}
+We sample pairs of subject entities from the set of entities compatible for a given relation (e.g., cities for the relation ``is the capital of''). For each relation, we sample 100 pairs of subject entities. 
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.35\textwidth]{img/j/j-mlp-logprob.pdf}
+    \includegraphics[width=0.35\textwidth]{img/j/j-attn-logprob.pdf}
+    \includegraphics[width=0.35\textwidth]{img/j/j-mlp-int2-logprob.pdf}
+    \includegraphics[width=0.35\textwidth]{img/j/j-attn-int2-logprob.pdf}
+    \caption{Indirect effect measured using the difference in the log probability as described in Equation \ref{eq:logprob} (IE$_\mathrm{alt}$). The results are obtained with GPT-J on two-operand arithmetic queries.}
+    \label{fig:logprob}
+\end{figure*}
+
+
+
+\section{Log Probability to Quantify the IE}
+\label{sec:logprob}
+In order to validate whether the measurements of the indirect effect are specific to the metric that we describe in Equation \ref{eq:ie}, we quantify the IE using the absolute difference in the log of the probability values assigned by the model to the results $r$ and $r'$. More formally, we compute
+\begin{align}
+\label{eq:logprob}
+    \mathrm{IE}_{\mathrm{alt}}(z) =
+     \begin{cases*}
+       \Delta' + \Delta  & if $r \neq r'$ \\
+      | \Delta |      & otherwise
+    \end{cases*}, 
+\end{align}
+where
+\begin{align}
+    \Delta' = & \log \mathbb{P}_z^*(r) - \log \mathbb{P}(r) \\
+    \Delta =  & \log \mathbb{P}(r') - \log \mathbb{P}_z^*(r') .
+\end{align}
+The results are reported in Figure \ref{fig:logprob}. The activation sites that we observe are the same as reported in Section \ref{sec:int1}: first-layer MLP at the operand tokens and last-token MLP and attention modules. 
+
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{img/pythia/3ops/pythia-ft-3ops-mlp-int2.pdf}
+    \includegraphics[width=\columnwidth]{img/pythia/3ops/pythia-ft-3ops-attn-int2.pdf}
+    \caption{Indirect effect (IE) measured for the attention modules in the fine-tuned version of Pythia 2.8B on three-operand arithmetic queries, when $r=r'$.}
+    \label{fig:pythia-ft-3ops-int2}
+\end{figure*}
+
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{img/pythia/3ops/pythia-3ops-attn.pdf}
+    \includegraphics[width=\columnwidth]{img/pythia/3ops/pythia-ft-3ops-attn.pdf}
+    \caption{Indirect effect (IE) measured for the attention modules in Pythia 2.8B on three-operand arithmetic queries, before and after fine-tuning.}
+    \label{fig:pythia-3ops-attn}
+\end{figure*}
+
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.35\textwidth]{img/pythia/pythia-mlp.pdf}
+    \includegraphics[width=0.35\textwidth]{img/pythia/pythia-attn.pdf}
+    \includegraphics[width=0.35\textwidth]{img/pythia/pythia-mlp-int2.pdf}
+    \includegraphics[width=0.35\textwidth]{img/pythia/pythia-attn-int2.pdf}
+    \caption{Indirect effect (IE) measured in the MLP and attention modules of Pythia 2.8B on two-operand arithmetic queries.}
+    \label{fig:pyhtia}
+\end{figure*}
+
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.35\textwidth]{img/llama/llama-mlp.pdf}
+    \includegraphics[width=0.35\textwidth]{img/llama/llama-attn.pdf}
+    \includegraphics[width=0.35\textwidth]{img/llama/llama-mlp-int2.pdf}
+    \includegraphics[width=0.35\textwidth]{img/llama/llama-attn-int2.pdf}
+    \caption{Indirect effect (IE) measured in the MLP and attention modules of LLaMA 7B on two-operand arithmetic queries.}
+    \label{fig:llama}
+\end{figure*}
+
+
+\section{Additional Information Flow Visualizations}
+\label{sec:additional_res}
+
+We include the IE measurements for the attention modules of GPT-J on the number retrieval task (Figure \ref{fig:j-int11-attn}) and on the factual knowledge queries (Figure \ref{fig:j-lama-attn}), and for Pythia 2.8B on three-operand arithmetic queries before and after fine-tuning (Figure \ref{fig:pythia-3ops-attn}).
+Additionally, we report the heatmap visualizations of the indirect effect measured for the following models: Pythia 2.8B (Figure \ref{fig:pyhtia}), LLaMA 7B (Figure \ref{fig:llama}), Goat (Figure \ref{fig:goat}), and GPT-J using word numerals (Figure \ref{fig:j-heatmap-words}). Finally, we visualize in Figure \ref{fig:pythia-ft-3ops-int2} the IE of MLPs and attention modules for the fine-tuned Pythia 2.8B in the fixed-result case.
+
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.35\textwidth]{img/goat/goat-mlp.pdf}
+    \includegraphics[width=0.35\textwidth]{img/goat/goat-attn.pdf}
+    \includegraphics[width=0.35\textwidth]{img/goat/goat-mlp-int2.pdf}
+    \includegraphics[width=0.35\textwidth]{img/goat/goat-attn-int2.pdf}
+    \caption{Indirect effect (IE) measured in the MLP and attention modules of Goat on two-operand arithmetic queries.}
+    \label{fig:goat}
+\end{figure*}
+
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.35\textwidth]{img/j/j-mlp-words.pdf}
+    \includegraphics[width=0.35\textwidth]{img/j/j-attn-words.pdf}
+    \includegraphics[width=0.35\textwidth]{img/j/j-mlp-words-int2.pdf}
+    \includegraphics[width=0.35\textwidth]{img/j/j-attn-words-int2.pdf}
+    \caption{Indirect effect (IE) measured in the MLP and attention modules of GPT-J on two-operand arithmetic queries, using numeral words to represent quantities.}
+    \label{fig:j-heatmap-words}
+\end{figure*}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
