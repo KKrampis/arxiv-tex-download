@@ -1,0 +1,276 @@
+\begin{thebibliography}{}
+
+\bibitem[{AI}, 2024]{mathstral}
+{AI}, M. (2024).
+\newblock Mathstral.
+
+\bibitem[Behr et~al., 1980]{behr1980children}
+Behr, M., Erlwanger, S., and Nichols, E. (1980).
+\newblock How {C}hildren {V}iew the {E}quals {S}ign.
+\newblock {\em Mathematics Teaching}, 92(1):13--15.
+
+\bibitem[Berglund et~al., 2024]{berglund2024reversalcursellmstrained}
+Berglund, L., Tong, M., Kaufmann, M., Balesni, M., Stickland, A.~C., Korbak, T., and Evans, O. (2024).
+\newblock The {R}eversal {C}urse: {LLM}s {T}rained on {"A is B"} fail to {L}earn {"B is A"}.
+
+\bibitem[Borazjanizadeh and Piantadosi, 2024]{borazjanizadeh2024reliable}
+Borazjanizadeh, N. and Piantadosi, S.~T. (2024).
+\newblock Reliable {R}easoning {B}eyond {N}atural {L}anguage.
+\newblock {\em arXiv preprint arXiv:2407.11373}.
+
+\bibitem[Bray, 2011]{bray2011collective}
+Bray, W.~S. (2011).
+\newblock A {C}ollective {C}ase {S}tudy of the {I}nfluence of {T}eachers' {B}eliefs and {K}nowledge on {E}rror-{H}andling {P}ractices {D}uring {C}lass {D}iscussion of {M}athematics.
+\newblock {\em Journal for Research in Mathematics Education}, 42(1):2--38.
+
+\bibitem[Briars and Larkin, 1984]{briars1984a}
+Briars, D. and Larkin, J. (1984).
+\newblock An {I}ntegrated {M}odel of {S}kill in {S}olving {E}lementary {W}ord {W}roblems.
+\newblock {\em Cognition and Instruction}, 1(3):245–296.
+
+\bibitem[Chen et~al., 2024]{chen2024premise}
+Chen, X., Chi, R.~A., Wang, X., and Zhou, D. (2024).
+\newblock Premise {O}rder {M}atters in {R}easoning with {L}arge {L}anguage {M}odels.
+\newblock In {\em International Conference on Machine Learning}. PMLR.
+
+\bibitem[Chomsky, 1957]{chomsky1957syntactic}
+Chomsky, N. (1957).
+\newblock {\em {Syntactic Structures}}.
+\newblock The Hague: Mouton.
+
+\bibitem[Clark, 1996]{clark1996using}
+Clark, H.~H. (1996).
+\newblock {\em Using {L}anguage}.
+\newblock Cambridge university press.
+
+\bibitem[Clement and Bernhard, 2005]{clement2005a}
+Clement, L. and Bernhard, J. (2005).
+\newblock A {P}roblem-{S}olving {A}lternative to {U}sing {K}ey {W}ords.
+\newblock {\em Mathematics Teaching in the Middle School}, 10(7):360–365.
+
+\bibitem[Collins et~al., 2024]{collins2024building}
+Collins, K.~M., Sucholutsky, I., Bhatt, U., Chandra, K., Wong, L., Lee, M., Zhang, C.~E., Zhi-Xuan, T., Ho, M., Mansinghka, V., et~al. (2024).
+\newblock Building {M}achines that {L}earn and {T}hink with {P}eople.
+\newblock {\em arXiv preprint arXiv:2408.03943}.
+
+\bibitem[Dubey et~al., 2024]{dubey2024llama3herdmodels}
+Dubey, A., Jauhri, A., Pandey, A., Kadian, A., Al-Dahle, A., Letman, A., Mathur, A., Schelten, A., Yang, A., Fan, A., Goyal, A., Hartshorn, A., Yang, A., Mitra, A., Sravankumar, A., Korenev, A., Hinsvark, A., Rao, A., Zhang, A., Rodriguez, A., Gregerson, A., Spataru, A., Roziere, B., Biron, B., Tang, B., Chern, B., Caucheteux, C., Nayak, C., Bi, C., Marra, C., McConnell, C., Keller, C., Touret, C., Wu, C., Wong, C., Ferrer, C.~C., Nikolaidis, C., Allonsius, D., Song, D., Pintz, D., Livshits, D., Esiobu, D., Choudhary, D., Mahajan, D., Garcia-Olano, D., Perino, D., Hupkes, D., Lakomkin, E., AlBadawy, E., Lobanova, E., Dinan, E., Smith, E.~M., Radenovic, F., Zhang, F., Synnaeve, G., Lee, G., Anderson, G.~L., Nail, G., Mialon, G., Pang, G., Cucurell, G., Nguyen, H., Korevaar, H., Xu, H., Touvron, H., Zarov, I., Ibarra, I.~A., Kloumann, I., Misra, I., Evtimov, I., Copet, J., Lee, J., Geffert, J., Vranes, J., Park, J., Mahadeokar, J., Shah, J., van~der Linde, J., Billock, J., Hong, J., Lee, J., Fu, J., Chi, J.,
+  Huang, J., Liu, J., Wang, J., Yu, J., Bitton, J., Spisak, J., Park, J., Rocca, J., Johnstun, J., Saxe, J., Jia, J., Alwala, K.~V., Upasani, K., Plawiak, K., Li, K., Heafield, K., Stone, K., El-Arini, K., Iyer, K., Malik, K., Chiu, K., Bhalla, K., Rantala-Yeary, L., van~der Maaten, L., Chen, L., Tan, L., Jenkins, L., Martin, L., Madaan, L., Malo, L., Blecher, L., Landzaat, L., de~Oliveira, L., Muzzi, M., Pasupuleti, M., Singh, M., Paluri, M., Kardas, M., Oldham, M., Rita, M., Pavlova, M., Kambadur, M., Lewis, M., Si, M., Singh, M.~K., Hassan, M., Goyal, N., Torabi, N., Bashlykov, N., Bogoychev, N., Chatterji, N., Duchenne, O., Çelebi, O., Alrassy, P., Zhang, P., Li, P., Vasic, P., Weng, P., Bhargava, P., Dubal, P., Krishnan, P., Koura, P.~S., Xu, P., He, Q., Dong, Q., Srinivasan, R., Ganapathy, R., Calderer, R., Cabral, R.~S., Stojnic, R., Raileanu, R., Girdhar, R., Patel, R., Sauvestre, R., Polidoro, R., Sumbaly, R., Taylor, R., Silva, R., Hou, R., Wang, R., Hosseini, S., Chennabasappa, S., Singh, S.,
+  Bell, S., Kim, S.~S., Edunov, S., Nie, S., Narang, S., Raparthy, S., Shen, S., Wan, S., Bhosale, S., Zhang, S., Vandenhende, S., Batra, S., Whitman, S., Sootla, S., Collot, S., Gururangan, S., Borodinsky, S., Herman, T., Fowler, T., Sheasha, T., Georgiou, T., Scialom, T., Speckbacher, T., Mihaylov, T., Xiao, T., Karn, U., Goswami, V., Gupta, V., Ramanathan, V., Kerkez, V., Gonguet, V., Do, V., Vogeti, V., Petrovic, V., Chu, W., Xiong, W., Fu, W., Meers, W., Martinet, X., Wang, X., Tan, X.~E., Xie, X., Jia, X., Wang, X., Goldschlag, Y., Gaur, Y., Babaei, Y., Wen, Y., Song, Y., Zhang, Y., Li, Y., Mao, Y., Coudert, Z.~D., Yan, Z., Chen, Z., Papakipos, Z., Singh, A., Grattafiori, A., Jain, A., Kelsey, A., Shajnfeld, A., Gangidi, A., Victoria, A., Goldstand, A., Menon, A., Sharma, A., Boesenberg, A., Vaughan, A., Baevski, A., Feinstein, A., Kallet, A., Sangani, A., Yunus, A., Lupu, A., Alvarado, A., Caples, A., Gu, A., Ho, A., Poulton, A., Ryan, A., Ramchandani, A., Franco, A., Saraf, A., Chowdhury, A., Gabriel,
+  A., Bharambe, A., Eisenman, A., Yazdan, A., James, B., Maurer, B., Leonhardi, B., Huang, B., Loyd, B., Paola, B.~D., Paranjape, B., Liu, B., Wu, B., Ni, B., Hancock, B., Wasti, B., Spence, B., Stojkovic, B., Gamido, B., Montalvo, B., Parker, C., Burton, C., Mejia, C., Wang, C., Kim, C., Zhou, C., Hu, C., Chu, C.-H., Cai, C., Tindal, C., Feichtenhofer, C., Civin, D., Beaty, D., Kreymer, D., Li, D., Wyatt, D., Adkins, D., Xu, D., Testuggine, D., David, D., Parikh, D., Liskovich, D., Foss, D., Wang, D., Le, D., Holland, D., Dowling, E., Jamil, E., Montgomery, E., Presani, E., Hahn, E., Wood, E., Brinkman, E., Arcaute, E., Dunbar, E., Smothers, E., Sun, F., Kreuk, F., Tian, F., Ozgenel, F., Caggioni, F., Guzmán, F., Kanayet, F., Seide, F., Florez, G.~M., Schwarz, G., Badeer, G., Swee, G., Halpern, G., Thattai, G., Herman, G., Sizov, G., Guangyi, Zhang, Lakshminarayanan, G., Shojanazeri, H., Zou, H., Wang, H., Zha, H., Habeeb, H., Rudolph, H., Suk, H., Aspegren, H., Goldman, H., Damlaj, I., Molybog, I.,
+  Tufanov, I., Veliche, I.-E., Gat, I., Weissman, J., Geboski, J., Kohli, J., Asher, J., Gaya, J.-B., Marcus, J., Tang, J., Chan, J., Zhen, J., Reizenstein, J., Teboul, J., Zhong, J., Jin, J., Yang, J., Cummings, J., Carvill, J., Shepard, J., McPhie, J., Torres, J., Ginsburg, J., Wang, J., Wu, K., U, K.~H., Saxena, K., Prasad, K., Khandelwal, K., Zand, K., Matosich, K., Veeraraghavan, K., Michelena, K., Li, K., Huang, K., Chawla, K., Lakhotia, K., Huang, K., Chen, L., Garg, L., A, L., Silva, L., Bell, L., Zhang, L., Guo, L., Yu, L., Moshkovich, L., Wehrstedt, L., Khabsa, M., Avalani, M., Bhatt, M., Tsimpoukelli, M., Mankus, M., Hasson, M., Lennie, M., Reso, M., Groshev, M., Naumov, M., Lathi, M., Keneally, M., Seltzer, M.~L., Valko, M., Restrepo, M., Patel, M., Vyatskov, M., Samvelyan, M., Clark, M., Macey, M., Wang, M., Hermoso, M.~J., Metanat, M., Rastegari, M., Bansal, M., Santhanam, N., Parks, N., White, N., Bawa, N., Singhal, N., Egebo, N., Usunier, N., Laptev, N.~P., Dong, N., Zhang, N., Cheng, N.,
+  Chernoguz, O., Hart, O., Salpekar, O., Kalinli, O., Kent, P., Parekh, P., Saab, P., Balaji, P., Rittner, P., Bontrager, P., Roux, P., Dollar, P., Zvyagina, P., Ratanchandani, P., Yuvraj, P., Liang, Q., Alao, R., Rodriguez, R., Ayub, R., Murthy, R., Nayani, R., Mitra, R., Li, R., Hogan, R., Battey, R., Wang, R., Maheswari, R., Howes, R., Rinott, R., Bondu, S.~J., Datta, S., Chugh, S., Hunt, S., Dhillon, S., Sidorov, S., Pan, S., Verma, S., Yamamoto, S., Ramaswamy, S., Lindsay, S., Lindsay, S., Feng, S., Lin, S., Zha, S.~C., Shankar, S., Zhang, S., Zhang, S., Wang, S., Agarwal, S., Sajuyigbe, S., Chintala, S., Max, S., Chen, S., Kehoe, S., Satterfield, S., Govindaprasad, S., Gupta, S., Cho, S., Virk, S., Subramanian, S., Choudhury, S., Goldman, S., Remez, T., Glaser, T., Best, T., Kohler, T., Robinson, T., Li, T., Zhang, T., Matthews, T., Chou, T., Shaked, T., Vontimitta, V., Ajayi, V., Montanez, V., Mohan, V., Kumar, V.~S., Mangla, V., Albiero, V., Ionescu, V., Poenaru, V., Mihailescu, V.~T., Ivanov, V., Li,
+  W., Wang, W., Jiang, W., Bouaziz, W., Constable, W., Tang, X., Wang, X., Wu, X., Wang, X., Xia, X., Wu, X., Gao, X., Chen, Y., Hu, Y., Jia, Y., Qi, Y., Li, Y., Zhang, Y., Zhang, Y., Adi, Y., Nam, Y., Yu, Wang, Hao, Y., Qian, Y., He, Y., Rait, Z., DeVito, Z., Rosnbrick, Z., Wen, Z., Yang, Z., and Zhao, Z. (2024).
+\newblock The {L}lama 3 {H}erd of {M}odels.
+
+\bibitem[Frank and Goodman, 2012]{frank2012predicting}
+Frank, M.~C. and Goodman, N.~D. (2012).
+\newblock Predicting {P}ragmatic {R}easoning in {L}anguage {G}ames.
+\newblock {\em Science}, 336(6084):998--998.
+\newblock Publisher: American Association for the Advancement of Science.
+
+\bibitem[Gao et~al., 2023]{gao2023pal}
+Gao, L., Madaan, A., Zhou, S., Alon, U., Liu, P., Yang, Y., Callan, J., and Neubig, G. (2023).
+\newblock {PAL}: {P}rogram-aided {L}anguage {M}odels.
+\newblock In {\em International Conference on Machine Learning}, pages 10764--10799. PMLR.
+
+\bibitem[Gibson et~al., 2019]{gibson2019efficiency}
+Gibson, E., Futrell, R., Piandadosi, S.~T., Dautriche, I., Mahowald, K., Bergen, L., and Levy, R. (2019).
+\newblock How {E}fficiency {S}hapes {H}uman {L}anguage.
+\newblock {\em Trends in {C}ognitive {S}ciences}.
+
+\bibitem[Goldberg, 2019]{goldberg2019assessing}
+Goldberg, Y. (2019).
+\newblock Assessing {BERT}'s {Syntactic} {Abilities}.
+\newblock {\em arXiv preprint arXiv:1901.05287}.
+
+\bibitem[G{\"u}{\c{c}}ler, 2014]{guccler2014role}
+G{\"u}{\c{c}}ler, B. (2014).
+\newblock The {R}ole of {S}ymbols in {M}athematical {C}ommunication: {T}he {C}ase of the {L}imit {N}otation.
+\newblock {\em Research in Mathematics Education}, 16(3):251--268.
+
+\bibitem[He-Yueya et~al., 2023]{he2023solving}
+He-Yueya, J., Poesia, G., Wang, R., and Goodman, N. (2023).
+\newblock Solving {M}ath {W}ord {P}roblems by {C}ombining {L}anguage {M}odels {W}ith {S}ymbolic {S}olvers.
+\newblock In {\em The 3rd Workshop on Mathematical Reasoning and AI at NeurIPS'23}.
+
+\bibitem[Hegarty et~al., 1995]{hegarty1995comprehension}
+Hegarty, M., Mayer, R.~E., and Monk, C.~A. (1995).
+\newblock Comprehension of arithmetic word problems: A comparison of successful and unsuccessful problem solvers.
+\newblock {\em Journal of Educational Psychology}, 87(1):18.
+
+\bibitem[Heim and Kratzer, 1998]{heim1998semantics}
+Heim, I. and Kratzer, A. (1998).
+\newblock {\em {Semantics in Generative Grammar}}.
+\newblock Wiley-Blackwell, Malden, MA.
+
+\bibitem[Hersh, 1998]{hersh1998mathematics}
+Hersh, R. (1998).
+\newblock What is {M}athematics, {R}eally?
+\newblock {\em Mitteilungen der Deutschen Mathematiker-Vereinigung}, 6(2):13--14.
+
+\bibitem[Iverson, 1979]{iverson1979notation}
+Iverson, K.~E. (1979).
+\newblock Notation as a {T}ool of {T}hought.
+\newblock {\em Communications of the ACM}, 23(8):444--465.
+\newblock ACM Turing Award Lecture, Delivered at ACM '79, Detroit, Oct. 29, 1979.
+
+\bibitem[Jiang et~al., 2023]{jiang2023mistral7b}
+Jiang, A.~Q., Sablayrolles, A., Mensch, A., Bamford, C., Chaplot, D.~S., de~las Casas, D., Bressand, F., Lengyel, G., Lample, G., Saulnier, L., Lavaud, L.~R., Lachaux, M.-A., Stock, P., Scao, T.~L., Lavril, T., Wang, T., Lacroix, T., and Sayed, W.~E. (2023).
+\newblock Mistral 7{B}.
+
+\bibitem[Karp et~al., 2019]{karp2019avoiding}
+Karp, K.~S., Bush, S.~B., and Dougherty, B.~J. (2019).
+\newblock Avoiding the {I}neffective {K}eyword {S}trategy.
+\newblock {\em Teaching Children Mathematics}, 25(7):428--435.
+
+\bibitem[Kingsdorf and Krawec, 2014]{kingsdorf2014error}
+Kingsdorf, S. and Krawec, J. (2014).
+\newblock Error {A}nalysis of {M}athematical {W}ord {P}roblem {S}olving {A}cross {S}tudents with and without {L}earning {D}isabilities.
+\newblock {\em Learning Disabilities Research \& Practice}, 29(2):66--74.
+
+\bibitem[Liz et~al., 2006]{liz2006exemplification}
+Liz, B., Dreyfus, T., Mason, J., Tsamir, P., Watson, A., and Zaslavsky, O. (2006).
+\newblock Exemplification in {M}athematics {E}ducation.
+\newblock In {\em Proceedings of the 30th Conference of the International Group for the Psychology of Mathematics Education}, volume~1, pages 126--154. Citeseer.
+
+\bibitem[McCoy et~al., 2023]{mccoy2023embers}
+McCoy, R.~T., Yao, S., Friedman, D., Hardy, M., and Griffiths, T.~L. (2023).
+\newblock Embers of {A}utoregression: {U}nderstanding {L}arge {L}anguage {M}odels {T}hrough the {P}roblem {T}hey are {T}rained to {S}olve.
+\newblock {\em arXiv preprint arXiv:2309.13638}.
+
+\bibitem[Miceli-Barone et~al., 2023]{miceli2023larger}
+Miceli-Barone, A.~V., Barez, F., Cohen, S.~B., and Konstas, I. (2023).
+\newblock The {L}arger they are, the {H}arder they {F}ail: {L}anguage {M}odels do not {R}ecognize {I}dentifier {S}waps in {P}ython.
+\newblock In {\em Findings of the Association for Computational Linguistics: ACL 2023}, pages 272--292.
+
+\bibitem[Mirin and Dawkins, 2022]{mirin2022mathematicians}
+Mirin, A. and Dawkins, P.~C. (2022).
+\newblock Do {M}athematicians {I}nterpret {E}quations {A}symmetrically?
+\newblock {\em The Journal of Mathematical Behavior}, 66:100959.
+
+\bibitem[Mirzadeh et~al., 2024]{mirzadeh2024gsm}
+Mirzadeh, I., Alizadeh, K., Shahrokhi, H., Tuzel, O., Bengio, S., and Farajtabar, M. (2024).
+\newblock G{SM}-{S}ymbolic: {U}nderstanding the {L}imitations of {M}athematical {R}easoning in {L}arge {L}anguage {M}odels.
+\newblock {\em arXiv preprint arXiv:2410.05229}.
+
+\bibitem[Misra, 2022]{misra2022minicons}
+Misra, K. (2022).
+\newblock minicons: {E}nabling {F}lexible {B}ehavioral and {R}epresentational {A}nalyses of {T}ransformer {L}anguage {M}odels.
+\newblock {\em arXiv preprint arXiv:2203.13112}.
+
+\bibitem[Olausson et~al., 2023]{olausson2023linc}
+Olausson, T.~X., Gu, A., Lipkin, B., Zhang, C.~E., Solar-Lezama, A., Tenenbaum, J.~B., and Levy, R. (2023).
+\newblock {LINC}: A {N}eurosymbolic {A}pproach for {L}ogical {R}easoning by {C}ombining {L}anguage {M}odels with {F}irst-{O}rder {L}ogic {P}rovers.
+\newblock {\em arXiv preprint arXiv:2310.15164}.
+
+\bibitem[Opedal et~al., 2024a]{opedal2024mathgap}
+Opedal, A., Shirakami, H., Sch{\"o}lkopf, B., Saparov, A., and Sachan, M. (2024a).
+\newblock Math{GAP}: {O}ut-of-{D}istribution {E}valuation on {P}roblems with {A}rbitrarily {C}omplex {P}roofs.
+\newblock {\em arXiv preprint arXiv:2410.13502}.
+
+\bibitem[Opedal et~al., 2024b]{opedal2024language}
+Opedal, A., Stolfo, A., Shirakami, H., Jiao, Y., Cotterell, R., Schölkopf, B., Saparov, A., and Sachan, M. (2024b).
+\newblock Do {L}anguage {M}odels {E}xhibit the {S}ame {C}ognitive {B}iases in {P}roblem {S}olving as {H}uman {L}earners?
+\newblock In {\em Forty-first International Conference on Machine Learning}.
+
+\bibitem[Pasolunghi et~al., 1999]{pasolunghi1999working}
+Pasolunghi, M.~C., Cornoldi, C., and De~Liberto, S. (1999).
+\newblock Working memory and intrusions of irrelevant information in a group of specific poor problem solvers.
+\newblock {\em Memory \& Cognition}, 27:779--790.
+
+\bibitem[Patel et~al., 2021]{patel-etal-2021-nlp}
+Patel, A., Bhattamishra, S., and Goyal, N. (2021).
+\newblock Are {NLP} models really able to solve simple math word problems?
+\newblock In Toutanova, K., Rumshisky, A., Zettlemoyer, L., Hakkani-Tur, D., Beltagy, I., Bethard, S., Cotterell, R., Chakraborty, T., and Zhou, Y., editors, {\em Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies}, pages 2080--2094, Online. Association for Computational Linguistics.
+
+\bibitem[Powell, 2012]{powell2012equations}
+Powell, S.~R. (2012).
+\newblock Equations and the {E}qual {S}ign in {E}lementary {M}athematics {T}extbooks.
+\newblock {\em The Elementary School Journal}, 112(4):627--648.
+
+\bibitem[Powell and Fuchs, 2018]{powell2018effective}
+Powell, S.~R. and Fuchs, L.~S. (2018).
+\newblock Effective {W}ord-{P}roblem {I}nstruction: {U}sing {S}chemas to {F}acilitate {M}athematical {R}easoning.
+\newblock {\em Teaching Exceptional Children}, 51(1):31--42.
+
+\bibitem[Powell et~al., 2022]{powell2022investigation}
+Powell, S.~R., Namkung, J.~M., and Lin, X. (2022).
+\newblock An {I}nvestigation of {U}sing {K}eywords to {S}olve {W}ord {P}roblems.
+\newblock {\em The Elementary School Journal}, 122(3):452--473.
+
+\bibitem[Radatz, 1979]{radatz1979error}
+Radatz, H. (1979).
+\newblock Error {A}nalysis {I}n {M}athematics {E}ducation.
+\newblock {\em Journal for Research in Mathematics Education}, 10(3):163--172.
+
+\bibitem[Rafalovich, 2006]{rafalovich2006making}
+Rafalovich, A. (2006).
+\newblock Making {S}ociology {R}elevant: {T}he {A}ssignment and {A}pplication of {B}reaching {E}xperiments.
+\newblock {\em Teaching Sociology}, 34(2):156--163.
+
+\bibitem[Razeghi et~al., 2022]{razeghi-etal-2022}
+Razeghi, Y., Logan~IV, R.~L., Gardner, M., and Singh, S. (2022).
+\newblock Impact of {P}retraining {T}erm {F}requencies on {F}ew-{S}hot {N}umerical {R}easoning.
+\newblock In Goldberg, Y., Kozareva, Z., and Zhang, Y., editors, {\em Findings of the Association for Computational Linguistics: EMNLP 2022}, pages 840--854, Abu Dhabi, United Arab Emirates. Association for Computational Linguistics.
+
+\bibitem[Riccomini, 2005]{riccomini2005identification}
+Riccomini, P.~J. (2005).
+\newblock Identification and {R}emediation of {S}ystematic {E}rror {P}atterns in {S}ubtraction.
+\newblock {\em Learning Disability Quarterly}, 28(3):233--242.
+
+\bibitem[Rowland, 2008]{rowland2008purpose}
+Rowland, T. (2008).
+\newblock The purpose, design and use of examples in the teaching of elementary mathematics.
+\newblock {\em Educational Studies in Mathematics}, 69(2):149--163.
+
+\bibitem[Shi et~al., 2023]{shi2023large}
+Shi, F., Chen, X., Misra, K., Scales, N., Dohan, D., Chi, E.~H., Sch{\"a}rli, N., and Zhou, D. (2023).
+\newblock Large {L}anguage {M}odels {C}an {B}e {E}asily {D}istracted by {I}rrelevant {C}ontext.
+\newblock In {\em International Conference on Machine Learning}, pages 31210--31227. PMLR.
+
+\bibitem[Sprague et~al., 2024]{sprague2024cotcotchainofthoughthelps}
+Sprague, Z., Yin, F., Rodriguez, J.~D., Jiang, D., Wadhwa, M., Singhal, P., Zhao, X., Ye, X., Mahowald, K., and Durrett, G. (2024).
+\newblock To {C}o{T} or not to {C}o{T}? {C}hain-of-thought helps mainly on math and symbolic reasoning.
+
+\bibitem[Stolfo et~al., 2023]{stolfo2023causal}
+Stolfo, A., Jin, Z., Shridhar, K., Schoelkopf, B., and Sachan, M. (2023).
+\newblock A {C}ausal {F}ramework to {Q}uantify the {R}obustness of {M}athematical {R}easoning with {L}anguage {M}odels.
+\newblock In {\em Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)}, pages 545--561.
+
+\bibitem[Verschaffel et~al., 2000]{verschaffel2000making}
+Verschaffel, L., Greer, B., and De~Corte, E. (2000).
+\newblock Making {S}ense of {W}ord {P}roblems.
+\newblock {\em Lisse, The Netherlands}, 224:224.
+
+\bibitem[Verschaffel et~al., 2020]{verschaffel2020word}
+Verschaffel, L., Schukajlow, S., Star, J., and Van~Dooren, W. (2020).
+\newblock Word problems in mathematics education: A survey.
+\newblock {\em Zdm}, 52:1--16.
+
+\bibitem[Wolf et~al., 2020]{wolf-etal-2020-transformers}
+Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., Cistac, P., Rault, T., Louf, R., Funtowicz, M., Davison, J., Shleifer, S., von Platen, P., Ma, C., Jernite, Y., Plu, J., Xu, C., Le~Scao, T., Gugger, S., Drame, M., Lhoest, Q., and Rush, A. (2020).
+\newblock Transformers: State-of-the-art natural language processing.
+\newblock In Liu, Q. and Schlangen, D., editors, {\em Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations}, pages 38--45, Online. Association for Computational Linguistics.
+
+\bibitem[Wu et~al., 2024]{wu2024exploring}
+Wu, D., Yang, J., and Wang, K. (2024).
+\newblock Exploring the reversal curse and other deductive logical reasoning in {BERT} and {GPT}-based large language models.
+\newblock {\em Patterns}, 5(9).
+
+\bibitem[Yang et~al., 2024]{yang2024qwen2}
+Yang, A., Yang, B., Hui, B., Zheng, B., Yu, B., Zhou, C., Li, C., Li, C., Liu, D., Huang, F., et~al. (2024).
+\newblock Qwen2 {T}echnical {R}eport.
+\newblock {\em arXiv preprint arXiv:2407.10671}.
+
+\bibitem[Ye et~al., 2024]{ye2024satlm}
+Ye, X., Chen, Q., Dillig, I., and Durrett, G. (2024).
+\newblock Sat{LM}: {S}atisfiability-{A}ided {L}anguage {M}odels {U}sing {D}eclarative {P}rompting.
+\newblock {\em Advances in Neural Information Processing Systems}, 36.
+
+\bibitem[Zhang et~al., 2023]{zhang2023ai}
+Zhang, C., Collins, K., Weller, A., and Tenenbaum, J. (2023).
+\newblock A{I} for {M}athematics: {A} {C}ognitive {S}cience {P}erspective.
+\newblock In {\em The 3rd Workshop on Mathematical Reasoning and AI at NeurIPS'23}.
+
+\end{thebibliography}

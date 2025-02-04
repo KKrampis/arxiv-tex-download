@@ -1,0 +1,429 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2024
+
+
+% ready for submission
+\usepackage[final]{neurips_2024}
+
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+     % \usepackage[preprint]{neurips_2024}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2024}
+
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2024}
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables 
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{amsmath}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\usepackage{adjustbox}
+\usepackage{epigraph}
+\setlength\epigraphwidth{.7\textwidth}
+\usepackage{tcolorbox}
+\usepackage[textsize=scriptsize,textwidth=2cm]{todonotes}
+
+\usepackage{listings,xcolor}
+\usepackage{tcolorbox}
+
+\usepackage{enumitem}
+\usepackage{wrapfig}
+\usepackage{twemojis}
+\usepackage{tikz,siunitx}
+\usetikzlibrary{shapes.geometric,shapes.symbols}
+
+\definecolor{customred}{rgb}{0.545, 0, 0}
+\newcommand{\tikzcircle}[2][customred]{%
+  \tikz[baseline=-0.5ex] \draw[#1, fill=customred, radius=#2] (0,0) circle;%
+}
+
+\newcommand{\tikzsymbol}[2][circle]{%
+  \tikz[baseline=-0.5ex] \node[inner sep=2pt, shape=#1, fill=customred]{};%
+}
+
+\title{Models Can and Should Embrace the Communicative Nature of Human-Generated Math}
+
+
+\author{%
+   Sasha Boguraev\(^\dag\),\quad Ben Lipkin\(^\ddag\),\quad Leonie Weissweiler\(^\dag\),\quad Kyle Mahowald\(^\dag\)\\ 
+   \(^\dag\)Department of Linguistics, The University of Texas at Austin \\
+   \(^\ddag\)Department of Brain and Cognitive Sciences, Massachusetts Institute of Technology \\
+\texttt{\{sasha.boguraev, weissweiler, kyle\}@utexas.edu}\\
+\texttt{lipkinb@mit.edu}\\
+}
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+Math is constructed by people for people:
+just as natural language corpora reflect not just propositions but the communicative goals of language users, the math data that models are trained on reflects not just idealized mathematical entities but rich communicative intentions.
+While there are important advantages to treating math in a purely symbolic manner, we here hypothesize that there are complementary benefits to treating math as situated linguistic communication and that language models are well suited for this goal, in ways that are not fully appreciated.
+We illustrate these points with two case studies. First, we ran an experiment in which we found that language models interpret the equals sign in a humanlike way---generating systematically different word problems for the same underlying equation arranged in different ways. 
+Second, we found that language models prefer proofs to be ordered in naturalistic ways, even though other orders would be logically equivalent.
+We advocate for AI systems that learn from and represent the communicative intentions latent in human-generated math.
+\end{abstract}
+
+\renewcommand{\epigraphflush}{center}
+\setlength{\epigraphwidth}{0.9\textwidth}
+\setlength{\beforeepigraphskip}{0mm}
+\setlength{\afterepigraphskip}{0mm}
+\epigraph{Mathematical propositions are first of all English sentences; not only English sentences, \\but each mathematical proposition has a resemblance to certain non-mathematical propositions. }{\textit{---Ludwig Wittgenstein, \textit{Lectures on the Foundations of Mathematics}, 1939}}
+
+\section{Introduction}
+
+Language Models sometimes rely on heuristics and statistics rather than being perfectly compositional idealized reasoners, especially in domains like math and logic \citep{mccoy2023embers,mirzadeh2024gsm, opedal2024mathgap,opedal2024language,patel-etal-2021-nlp,razeghi-etal-2022, shi2023large,stolfo2023causal}.
+Whereas language production and comprehension involve some idealized composition using abstract rules \citep{chomsky1957syntactic,heim1998semantics},
+in tandem with memorization and pragmatic inference \citep{clark1996using,goldberg2019assessing}, math and logic reflect domains where one might expect an idealized compositional system to be required for obtaining precise solutions.
+Indeed, whether an expression is written \(5 + x = 7\) or \(7 - 5 = x\) or ``What is 5 less than 7?'' or ``Seven frogs were sitting on a log. Five left. How many are there now?'', there is an underlying computation that can be extracted and performed (namely, the expression \(7 - 5\)).
+To properly solve these problems, the thinking goes, systems should abstract away from their situated format into symbolic space.
+
+There is an intuitive, and well-justified, idea that competent human mathematical reasoners employ exactly this kind of abstraction. 
+By contrast, less competent mathematical reasoners (e.g., children struggling to learn math) are often shown to rely on heuristics, schemas, and keywords \citep{briars1984a,clement2005a,karp2019avoiding,powell2018effective,verschaffel2000making}.
+For instance, kids might learn that every time they see the phrase ``in total'' in a word problem, they should add up all the numbers \citep{powell2022investigation}.
+While the ``heuristic'' keyword-based direct translation approach may be less cognitively taxing, it is also prone to translation errors \citep{verschaffel2020word}.
+Students who report adopting the more involved strategy of first parsing a math word problem into a structured mental model, then planning computation and finally evaluating the solution in that space, are more successful problem solvers \citep{hegarty1995comprehension}.
+
+
+
+Taken together, these ideas might make it seem like the goal of AI math models should be to leave the messy domain of language behind and translate expressions into symbolic representations. 
+And, indeed, combining language models with symbolic solvers has proven successful in a variety of math and reasoning domains \citep{borazjanizadeh2024reliable,gao2023pal,he2023solving,olausson2023linc,sprague2024cotcotchainofthoughthelps,ye2024satlm}.
+
+
+\begin{figure}
+    \centering
+\includegraphics[width=1\linewidth]{robot-figv2.pdf}
+    \vspace{-15pt}
+    \caption{For each pair of equations, we generate corresponding word problems and then try to recover the equations from those problems. The model often recovered the original ordering.}\label{fig:method1}
+    \vspace{-7.5pt}
+\end{figure}
+
+Here, we argue that something is lost when disregarding 
+the original context.
+We introduce the \textbf{Communicative Math Hypothesis}:
+\textit{Math is constructed by people, for people. As such, there are conventions and pragmatics that people bring to the production and comprehension of mathematical expressions---communicative interpretations that go beyond the purely symbolic.} Such traces of information are particularly well suited for study via the tools of linguistics and cognitive science.
+The choice to write \(3x + 9\) instead of \(3(x + 3)\) conveys something to the reader, even though they are equivalent.
+{Similarly, the proof of a theorem is not only a formalization that could be computationally verified, but is a communicative act, with intention of being internalized and understood by others.}
+
+Drawing on research in math education that we believe is underappreciated in machine learning, we make the case for AI researchers to take the Communicative Math Hypothesis seriously.
+We present some initial proof-of-concept experiments showing that LLMs pick up on these communicative regularities. We argue that this information should not always be ignored or explained away, but is a crucial component of human mathematics.
+
+\section{Case Study One: Equations are Asymmetric}
+
+
+Asymmetry in human mathematical interpretation has long been studied in math education. 
+In particular, there is a wealth of literature on the perils of grade-school-aged children's asymmetrical understanding of math -- that is, a difficulty in reasoning with a problem such as \(\Box = 2 + 4\), despite relative comfort with the complementary equation of \(2 + 4 = \Box\) \citep{behr1980children, powell2012equations}.
+But, such sensitivity to asymmetry is not isolated to students. Even expert mathematicians understand math asymmetrically \citep{mirin2022mathematicians}, offering different interpretations of equivalent expressions based on what is on the left or right of the equals sign. Here, we present results from a case study demonstrating that LLMs are sensitive to such asymmetries in equations as well and, like humans, do not learn a purely symmetrical interpretation of the equals sign.
+
+\paragraph{Methods} To test LLMs' sensitivity to symmetry, we conduct an experiment assessing their ability to reconstruct the equations they used to create a specific word problem, as shown in Figure \ref{fig:method1}. 
+Formally, we perform a three-step experiment. We first generate a set of \( n \) paired forward and reverse equations, denoted as \( E = \{ e_1, e_2, \ldots, e_n \} \), where each paired equation \( e_i \) consists of the forward equation \( {e_i}^f \) and the reverse equation \( {e_i}^r \). Thus, we can express each \( e_i \) as \( e_i = \{ {e_i}^f, {e_i}^r \} \). Next, for each of our \( n \) pairs, we pass both equations in \(e_i\) to GPT-4o, and prompt it to generate a corresponding pair of word problems, \(w_i = \{w_i{}^f\), \(w_i{}^r\}\), that could be solved by \(e_i\), with \(W = \{w_1 \dots w_n\}\). We finally ask the LLM to extract the equations \(e'_i = \{e'_i{}^f\), \(e'_i{}^r\}\) for each \(w_i\in W\), with \(E' = \{e'_1\dots e'_n\}\). Our hypothesis is that across all \(n\) equations, the LLMs will more often recover \(e'_i{}^f\) from \(e_i{}^f\) and \(e'_i{}^r\) from \(e_i{}^r\). 
+For details on the equations used, their generation, and model prompting, see Appendix \ref{app:StudyOne}.
+
+\paragraph{Results and Discussion} We measure the recovery rate of an equation's original order and the respective reverse order using GPT-4o across 5 different sets of 200 pairs of randomly generated starting equations. 
+We found that the original equation was recovered on average 52\% of the time with a 95\% CI of [51\%, 54\%] across 5 runs. The reverse equation was nearly never recovered: 0.2\% of the time, with a 95\% CI of [0.0\%, 0.4\%] -- a mere 3 times over the 1000 samples.
+
+These results suggest a difference between the word problems generated from a ``forward'' equation and word problems generated from a logically equivalent ``reverse'' equation, and that this difference is itself recoverable by GPT-4o.
+We posit that this information, which a purely symbolic solver would be agnostic to, is crucial information for systems that aim to use math in collaboration with humans or in human-like ways.
+These findings are consistent with work showing that premise order matters in LLMs' ability to reason \citep{berglund2024reversalcursellmstrained, chen2024premise, wu2024exploring}, although they frame this order sensitivity as primarily revealing LLMs' brittleness. 
+We interpret these findings (and theirs) as revealing sensitivity to important communicative factors inherent in the data.
+
+
+\section{Case Study Two: Mathematical Rules and Proofs Have Orders}
+
+Our second case study focuses on mathematical communication of the sort more likely to take place among professional mathematicians: mathematical rules and proofs.
+Proofs, in particular, are widely used in academic math, as well as related fields, and are duly an area of major focus for AI for math.
+
+Proofs are written to communicate truths that are, in some sense, tautological.
+Nonetheless, mathematicians have strong expectations and interpretations about the directionality of equation. 
+For instance, there are generalized principles associated with equal signs, like that the right side of the equation expounds upon or explains the left side \citep{mirin2022mathematicians}.
+Thus, while $a = b$ and $b = a$ are equivalent statements by our agreed-upon set of axioms and inference rules, the choice of one or the other might communicate a different message when used in a proof.
+
+
+To explore the preferred orderings used by mathematicians in proofs and rules, \citet{mirin2022mathematicians} utilize a set of \textit{breaching experiments}. Breaching experiments are a class of experiments which try to break rules in an attempt to confirm their existence \citep{rafalovich2006making}. In particular, the authors first provided expert mathematicians with a host of formal mathematical equations, such as the distributive rule or an inductive proof. However, these equations were ordered in an unnatural manner -- that is, in the case of rules, orders which are not commonly encountered in formal mathematical texts, or in the case of proofs, orders in which steps do not sequentially build from one to the next. The authors measured whether these mathematicians reported any perceived breaches, with any such breaches providing evidence for the existence of the mathematicians' ordering preferences. Our case study into LLM ordering preferences in formal mathematics follows in this vein, measuring LLM surprisals for various natural (extant) and unnatural (unobserved) equation orderings.
+
+\paragraph{Methods} Our set of mathematical equations consists of all examples used in the breaching experiments of \citet{mirin2022mathematicians}. This totals ten different examples, six of which are one line equivalences, expressing common mathematical rules, and the other four of which are a series of equivalences comprising a longer proofs. Each example further contains a brief textual introduction before the series of equivalences. All examples are reported in Appendix \ref{app:equations}.
+
+ We first split each equation into its individual expressions. We then generate every possible ordering of a given equation by permuting the order of these individual expressions. Finally, for each model we calculate the average per-token surprisal for every ordering of expressions in a given equation, conditioned on that equation's textual introductions. Our calculations are performed using the \texttt{minicons} package \citep{misra2022minicons}, a wrapper around Huggingface's \texttt{transformers} package \citep{wolf-etal-2020-transformers}.
+
+In this case study, we use the instruction-tuned variants of four models: LLaMa 3.1 8B \citep{dubey2024llama3herdmodels}, Mistral 7B v0.3 \citep{jiang2023mistral7b}, Mathstral 7B \citep{mathstral}, and Qwen2-Math 7B\citep{yang2024qwen2}. Two of these models were trained on general corpora (LLaMa and Mistral), the other two fine-tuned on math (Mathstral and Qwen2-Math).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{variants.pdf}
+    \vspace{-25pt}
+    \caption{We compare average per-token surprisal for different, logically equivalent orderings of expressions in proofs from \citet{mirin2022mathematicians} (first row), and corresponding variants (second through fourth row). We find that the original order (\tikzsymbol[diamond])) has lower per-token surprisals on average (more probable) than equivalent counterfactual orders.}
+    \label{fig:proof_order}
+    \vspace{-7.5pt}
+\end{figure}
+
+\paragraph{Equation Variants}
+To control for our ten equations potentially being within the evaluated model's training data, we also performed evaluations with three sets of modified, but equivalent, variants of each equation. Our first variants consist of all proofs reworded in a logically equivalent, but expressively different, manner. Our second variants systematically replace all equation variable names, and some rule names, with emojis -- maintaining the correctness of equations, but presenting them in a unique, unseen, manner. Our last set of variants combines the two previous variants, substituting emojis into the reworded variants. All variants are reported in Appendix \ref{app:variants}.
+
+\paragraph{Results and Discussion} As seen in Figure \ref{fig:proof_order}, the evaluated models display clear and consistent preferences for the natural ordering in nine of ten equations. In seven of these,
+all models display uniform preference for each equation's natural ordering. Of the remaining two equations (\textsc{Difference Quotient} and \textsc{Proof}), only a few nearby orders had a lower surprisal than the natural orders (99.6\textsuperscript{th} and 98.3\textsuperscript{rd} percentiles, respectively). The only equation for which there is no clear model preference for the natural form is \textsc{product rule}, but this was also a rule noted as unusual by participants in \citet{mirin2022mathematicians}: mathematicians expressed surprise at seeing $f$ and $g$ instead of $f(x)$ and $g(x)$. When we instead use the latter notation, we see consistent preferences for the natural order.
+We do not find significant differences between the performances of math-fine-tuned models and more generalized language models across all equations (paired $t = 0.606$, $p = 0.548$). 
+
+These results are further consistent across our equation variants (Figure \ref{fig:proof_order}). 
+While there is minor variability here (e.g., after rewording proofs, models no longer display clear preferences in \textsc{Exponent Prod Rule} but do display clear preferences for natural orderings in \textsc{product rule}) the evaluated LLMs maintain clear and consistent preferences for natural equation orderings even when modified.
+
+ These results suggest that LLMs agree with expert mathematicians in their preferences for ordering of proofs and rules, that is in a manner which expresses clear communicative intent. Further, our work with equation variants suggest that they are aligned due to more than just memorizing training data. This alignment leads to AI systems able to produce math interpretable by those using them, which in comparison to much of the uninterpretable math produced by symbolic solvers and logic programming systems, is a highly desirable quality. As such, while the proofs LLMs produce in their current iteration may not always be correct, any remedies attempting to improve on that correctness should not do so to the detriment of this alignment, if the goal is human use.
+
+\section{Practical Applications}
+
+We focused our experiments on equation asymmetry and proof ordering, showing that LLMs learn extra-symbolic communicative information in both domains. But these principles encompass a much broader class of phenomena. For instance, several patterns identified as reflecting LLMs' brittleness may instead be fruitfully seen as contributing to the communicative interpretation of math.
+\begin{itemize}[topsep=0pt, leftmargin=3mm]
+\addtolength\itemsep{-1.2mm}
+    \item Even though they don't matter logically, variable names matter for communicating math (e.g., functions are often $f$ and $g$). This pattern extends to programming as well \citep{hersh1998mathematics,miceli2023larger}.
+    \item Logically extraneous or pragmatically anomalous information can matter for inferences about how expressions are interpreted \citep{pasolunghi1999working,shi2023large}.
+    \item Notation choice and instruction/prompt phrasing can matter for how problems are solved \citep{guccler2014role,iverson1979notation}.
+\end{itemize}
+
+Seeing these aspects of LLMs as possible features, and not bugs, could be an important step in developing AI systems that can work with humans.
+For instance, working mathematicians were long limited to purely symbolic theorem provers.
+Such systems in isolation neglect the more human aspects of math, ignoring differences in style and comprehensibility.
+We recommend developing proof assistants that are sensitive to these regularities in human proof-writing and other communicative cues.
+LLM-based proof systems offer the promise of mathematical assistants that can work \textit{with} people \citep{collins2024building}, alongside them and not just \textit{for} them as blackbox tools. Below we discuss this idea in two particularly relevant domains.
+
+\paragraph{Math Education}
+Math educators leverage their explicit and implicit understanding of mathematical communicative signaling to enhance teaching. They carefully choose problems presented in manners that probe the intended concepts \citep{liz2006exemplification, rowland2008purpose}. They can identify subtle misunderstandings in their students' reasoning just by observing how they discuss mathematical concepts and use them in practice \citep{bray2011collective, kingsdorf2014error, radatz1979error, riccomini2005identification}. These are key skills for educators, allowing for more efficient and effective teaching. As we move towards building AI assistants for math education, it is pertinent to develop systems that, like math educators, can both produce and identify these rich communicative signals.
+
+\paragraph{Math Research}
+The furthering of knowledge in any field depends upon the ability to communicate new ideas. If AI math systems are unable to communicate with those using them, we risk merely developing powerful systems that remain limited in their benefits. Instead, we advocate for building systems that produce math in a manner which is communicative and human-like by design, offering promise of furthering our collective mathematical knowledge base. While there is some benefit to systems that can solve problems and prove theorems that humans cannot, what we gain is limited if little information from their methods can be communicated and thusly understood. Of course, AI systems augmented with symbolic solvers do possess the necessary qualities of correctness and robustness which current, non-augmented, LLMs do not. We are not arguing that future AI math systems should lose these qualities, merely that they should also possess communicative sensitivity, something that many current approaches lack. Developing a new generation of hybrid systems, that work through problems via human-interpretable traces, while in parallel formalizing and verifying via symbolic means, appears to be a fruitful path forward.
+
+\section{Conclusion}
+
+While necessarily fuzzier than purely symbolic representations, the communicative principles in human-generated math are not lawless or illogical but can be studied, systematized, and modeled as rational behavior---as they are in linguistics and cognitive science \citep{clark1996using,frank2012predicting,gibson2019efficiency}.
+We join \citet{zhang2023ai} in their call for a cognitive science perspective on AI and mathematics, centering the role of math as a group activity and communicative endeavor.
+The math of the people, by the people, for the people, shall not perish from our models. 
+
+\section*{Acknowledgments}
+We would like to thank Paul Dawkins for valuable discussions and insights on mathematical asymmetry and, more generally, the math education literature. We would further like to thank Qing Yao and the computational linguistics research group at UT
+Austin for their valuable discussions and insights on this work. We would also like to thank Kanishka Misra for assistance with the \texttt{minicons} package, and comments on the manuscript.
+We acknowledge funding from NSF CAREER grant 2339729 (to Kyle Mahowald).
+\bibliographystyle{apalike}  
+\bibliography{custom,anthology}
+\appendix
+
+\newpage
+
+\section{Equation Generation and Prompting in Case Study One}\label{app:StudyOne}
+\subsection{Equation Generation}
+
+For step one of this experiment, we create our equation sets as follows. We first create two independent expressions, each of which consists of two operands, either added or subtracted to each other. One of these operands is a single digit number, with the other being a variable quantity in \(x\) with a single digit coefficient. All operands, operations, and choice of which operands are the variable quantity are selected at random. We then form our pair of complimentary equations by placing an equals sign between these two expressions, in both orders. That is, given the two expressions \(a\) and \(b\), our pair of complimentary equations would be \(a=b\) and \(b=a\). To illustrate further, a generated set of expressions may include, for example, \(2x + 3 = 4 - 5x\) or \(8 - 5x = 2 + 3x\), but not \(2x = 3\), \(4x + 5y = 8x - 2\), or \(9x * 2 = x - 4\).
+
+\subsection{Prompting Methods}
+Our experimental methodology necessitates prompting GPT-4o twice for each equation in our evaluation set: once to create a word problem from a given equation, and once to try and recover an equation given a math word problem. Below, we describe the prompts used for each of these steps.
+
+\subsubsection{Prompting for Word Problem Creation}
+
+For a given equation, \textsc{equation}, we first prime GPT-4o with the following command:
+
+\begin{quote}
+    "You are a helpful middle school math teacher."
+\end{quote}
+
+We then prompt the model to generate a word problem using the following prompt:
+
+\begin{quote}
+    "Create a grade-school math problem representing the following equation: \{\textsc{equation}\}. Make sure your problem is clear, concise, represents every term of the equation, and ends in a question mark. Generate just the problem and nothing else."
+\end{quote}
+
+\subsubsection{Prompting for Equation Recovery}
+
+For a given math word problem, \textsc{problem}, we first prime GPT-4o with the following command:
+
+\begin{quote}
+    You are a helpful assistant.
+\end{quote}
+
+We then prompt the model to recover the equation that is represented by \textsc{problem} with the following prompt:
+
+\begin{quote}
+    "What is the underlying math equation represented by the following situation: \{\textsc{problem}\}. Use the letter 'x' for the unknown quantity. Please do not explain, or write any accompanying text, give just a single equation and nothing else."
+\end{quote}
+
+\section{Equation Set for Case Study Two}\label{app:equations}
+
+We use the following set of equations from \citet{mirin2022mathematicians} for evaluating model order preferences in formal mathematics. We name each following subsection as they are labeled in Figure \ref{fig:proof_order}. Each equation is presented below in its "natural" form. All \TeX formatting used to render the following sections, up-to the end of the equations, is included in our experiment.
+
+\subsection{\textsc{Difference Quotient}}
+The \textbf{difference quotient} of a function $g$ is defined to be 
+
+\begin{equation*}
+    \frac{g(x + h) - g(x)}{(x + h) - x}
+\end{equation*}
+
+where $h$ is nonzero. Let $f$: $\mathbb{R}\rightarrow\mathbb{R}$ be the function defined by $f(x) = x^2$. The following shows the difference quotient:
+
+\begin{align*}
+    \frac{f(x + h) - f(x)}{(x + h)-x} &= \frac{f(x + h) - f(x)}{h}\\
+    &= \frac{(x + h)^2 - x^2}{h}\\
+    &= \frac{x^2 + 2xh + h^2 - x^2}{h}\\
+    &= \frac{2xh}{h^2} \\
+    &= 2x + h
+\end{align*}
+
+\subsection{\textsc{Distributive}}
+The distributive law tells us that for all numbers $x$, $y$, and $z$,\begin{equation*}x(y+z) = xy + xz
+\end{equation*}
+\subsection{\textsc{Exponents Diff Rule}}
+Recall the Properties of Exponents:\begin{equation*}
+\frac{b^x}{b^y} = b^{x-y}
+\end{equation*}
+\subsection{\textsc{Exponents Power Rule}}
+Recall the Properties of Exponents:\begin{equation*}
+(b^x)^y = b^{xy}
+\end{equation*}
+\subsection{\textsc{Exponents Prod Rule}}
+Recall the Properties of Exponents:\begin{equation*}
+b^x * b^y = b^{x+y}
+\end{equation*}
+\subsection{\textsc{Homomorphism}}
+Let $\langle S,\star\rangle$ and $\langle S',\star'\rangle$ be binary algebraic structures. A \textbf{homomorphism from $\langle S,\star\rangle$ to $\langle S',\star'\rangle$} is a function $\phi$ : $S\rightarrow S'$ such that for all $x$, $y\in S$,\begin{equation*}
+\phi(x\star y) = \phi(x) \star'\phi(y)
+\end{equation*}
+\subsection{\textsc{Induction}}
+The following is a portion of a proof by induction that for all natural numbers $k$, $k^3 - k$ is divisible by 6. At this point in the proof, it has been assumed that $n^3 - n$ is divisible by 6, and it is being shown that $(n+1)^3 - (n+1)$ is therefore also divisible by 6.\begin{align*}(n+1)^3 - (n + 1) &= (n^3 +3n^2 + 3n + 1) - (n + 1)\\&=(n^3 +3n^2 + 3n + 1) - (n + 1)\\&=(n^3 - n) + (3n^2 + 3n)\\&=(n^3 - n) + 3n(n+1)
+\end{align*}
+\subsection{\textsc{Product Rule}}
+The \textit{product rule} for derivatives says that if $f$ and $g$ are differentiable functions, then
+\begin{align*}
+fg' + f'g = (fg)'
+\end{align*}
+\subsection{\textsc{Proof}}
+\begin{theorem}Suppose $\langle S,\star\rangle$ and $\langle S',\star'\rangle$ be binary algebraic structures, and $\phi$ is an isomorphism from $\langle S,\star\rangle$ onto $\langle S',\star'\rangle$. Further suppose that $e$ is a left identity element in $\langle S,\star\rangle$. Then $\phi(e)$ is a left identity element in $\langle S',\star'\rangle$.\end{theorem}
+        
+\begin{proof}Let $s'$ be an element of $S'$. Since $\phi$ is onto, there exists some $s\in S$ such that $\phi(s) = s'$. Hence\begin{equation*}s' = \phi(s) = \phi(e\star s) = \phi(e)\star'\phi(s) = \phi(e)\star's'
+\end{equation*}
+\end{proof}
+        
+\subsection{\textsc{Set Theory}}
+The following is a proof in a set theory textbook that if $a$ is a transitive set, then $\bigcup (a^+)=a$. Note that a transitive set is defined to be a set $a$ such that all members of $a$ are subsets of $a$, and $a^+$ is defined to be $a\cup \{a\}$\begin{proof}\begin{align*}(\bigcup a^+)&=\bigcup(a \cup \{a\})\\&=(\bigcup a)\cup(\bigcup \{a\})\\&=(\bigcup a)\cup a\\&=a
+\end{align*}\end{proof}
+
+\section{Equation Variants}\label{app:variants}
+
+\subsection{Reworded Variants}
+\subsubsection{\textsc{Difference Quotient}}
+Let $f$: $\mathbb{R}\rightarrow\mathbb{R}$ be the function $f(x) = x^2$. The following shows the difference quotient:\begin{align*}\frac{f(x + h) - f(x)}{(x + h)-x} &= \frac{f(x + h) - f(x)}{h}\\&= \frac{(x + h)^2 - x^2}{h}\\&= \frac{x^2 + 2xh + h^2 - x^2}{h}\\&= \frac{2xh}{h^2}\\&= 2x + h
+\end{align*}
+\subsubsection{\textsc{Distributive}}
+For all numbers $x$, $y$, and $z$, the distributive law states that \begin{equation*}x(y+z) = xy + xz
+\end{equation*}
+\subsubsection{\textsc{Exponents Diff Rule}}
+Here are some exponent properties:\begin{equation*}\frac{b^x}{b^y} = b^{x-y}
+\end{equation*}
+\subsubsection{\textsc{Exponents Power Rule}}
+Here are some exponent properties:\begin{equation*}(b^x)^y = b^{xy}
+\end{equation*}
+\subsubsection{\textsc{Exponents Prod Rule}}
+Here are some exponent properties:\begin{equation*}b^x * b^y = b^{x+y}
+\end{equation*}
+\subsubsection{\textsc{Homomorphism}}
+If $\langle S,\star\rangle$ and $\langle S',\star'\rangle$ are binary algebraic structures, a \textbf{homomorphism from $\langle S,\star\rangle$ to $\langle S',\star'\rangle$} is a function $\phi$ : $S\rightarrow S'$ such that $\forall$ $x$, $y\in S$,\begin{equation*}\phi(x\star y) = \phi(x) \star'\phi(y)
+\end{equation*}
+\subsubsection{\textsc{Induction}}
+Inductively prove that $\forall k\in\mathbb{N}$, $k^3 - k$ is divisible by 6. We will show that $(n+1)^3 - (n+1)$ is divisible by 6, with the prior assumption that $n^3 - n$ is divisible by 6.\begin{align*}(n+1)^3 - (n + 1) &= (n^3 +3n^2 + 3n + 1) - (n + 1)\\&= (n^3 - n) + (3n^2 + 3n)\\&= (n^3 - n) + 3n(n+1)
+\end{align*}
+\subsubsection{\textsc{Product Rule}}
+If $f$ and $g$ are differentiable functions, then the \textit{product rule} states that \begin{align*}(fg)' = fg' + f'g 
+\end{align*}
+\subsubsection{\textsc{Proof}}
+\begin{theorem} $\phi$ is an isomorphism from $\langle S,\star\rangle$ onto $\langle S',\star'\rangle$ where $\langle S,\star\rangle$ and $\langle S',\star'\rangle$ are both binary algebraic structures. If $e$ is a left identity element in $\langle S,\star\rangle$, then $\phi(e)$ is a left identity element in $\langle S',\star'\rangle$.\end{theorem}
+        
+        \begin{proof}Let $s'\in S'$. Due to $\phi$ being onto, $\exists s\in S$ such that $\phi(s) = s'$. Hence\begin{equation*}s' = \phi(s) = \phi(e\star s) = \phi(e)\star'\phi(s) = \phi(e)\star's'\end{equation*}\end{proof}
+\subsubsection{\textsc{Set Theory}}
+A transitive set is defined to be a set $a$ such that all members of $a$ are subsets of $a$, and $a^+$ is defined to be $a\cup \{a\}$. We show a proof that if $a$ is a transitive set, then $\bigcup (a^+)=a$.\begin{proof}\begin{align*}(\bigcup a^+) &= \bigcup(a \cup \{a\})\\&= (\bigcup a)\cup(\bigcup \{a\})\\&= (\bigcup a)\cup a\\&= a
+\end{align*}\end{proof}
+\subsection{Emoji-Substituted Original Proof Variants}
+\subsubsection{\textsc{Difference Quotient}}The \textbf{\twemoji{1f600}} of a function $\twemoji{1f601}$ is defined to be \begin{equation*}\frac{\twemoji{1f601}(\twemoji{1f604} + \twemoji{1f603}) - \twemoji{1f601}(\twemoji{1f604})}{(\twemoji{1f604} + \twemoji{1f603}) - \twemoji{1f604}}\end{equation*}where $\twemoji{1f603}$ is nonzero. Let $\twemoji{1f602}$: $\mathbb{R}\rightarrow\mathbb{R}$ be the function defined by $\twemoji{1f602}(\twemoji{1f604}) = \twemoji{1f604}^2$. The following shows the \twemoji{1f600}:\begin{align*}\frac{\twemoji{1f602}(\twemoji{1f604} + \twemoji{1f603}) - \twemoji{1f602}(\twemoji{1f604})}{(\twemoji{1f604} + \twemoji{1f603})-\twemoji{1f604}} &= \frac{\twemoji{1f602}(\twemoji{1f604} + \twemoji{1f603}) - \twemoji{1f602}(\twemoji{1f604})}{\twemoji{1f603}}\\&= \frac{(\twemoji{1f604} + \twemoji{1f603})^2 - \twemoji{1f604}^2}{\twemoji{1f603}}\\&= \frac{\twemoji{1f604}^2 + 2\twemoji{1f604}\twemoji{1f603} + \twemoji{1f603}^2 - \twemoji{1f604}^2}{\twemoji{1f603}}\\&= \frac{2\twemoji{1f604}\twemoji{1f603}}{\twemoji{1f603}^2}\\&= 2\twemoji{1f604} + \twemoji{1f603}
+\end{align*}
+\subsubsection{\textsc{Distributive}}
+The distributive law tells us that for all numbers $\twemoji{1f600}$, $\twemoji{1f601}$, and $\twemoji{1f602}$,\begin{equation*}\twemoji{1f600}(\twemoji{1f601}+\twemoji{1f602}) = \twemoji{1f600}\twemoji{1f601} + \twemoji{1f600}\twemoji{1f602}
+\end{equation*}
+\subsubsection{\textsc{Exponents Diff Rule}}
+Recall the Properties of Exponents:\begin{equation*}\frac{\text{\twemoji{1f600}}^{\text{\twemoji{1f601}}}}{\text{\twemoji{1f600}}^{\text{\twemoji{1f602}}}} = \text{\twemoji{1f600}}^{\text{\twemoji{1f601} - \twemoji{1f602}}}
+\end{equation*}
+\subsubsection{\textsc{Exponents Power Rule}}
+Recall the Properties of Exponents:\begin{equation*}(\text{\twemoji{1f600}}^{\text{\twemoji{1f601}}})^{\text{\twemoji{1f602}}} = \text{\twemoji{1f600}}^{\text{\twemoji{1f601} \twemoji{1f602}}}
+\end{equation*}
+\subsubsection{\textsc{Exponents Prod Rule}}
+Recall the Properties of Exponents:\begin{equation*}\text{\twemoji{1f600}}^{\text{\twemoji{1f601}}} * \text{\twemoji{1f600}}^{\text{\twemoji{1f602}}} = \text{\twemoji{1f600}}^{\text{\twemoji{1f601} + \twemoji{1f602}}}
+\end{equation*}
+\subsubsection{\textsc{Homomorphism}}
+Let $\langle \twemoji{1f600},\twemoji{1f605}\rangle$ and $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$ be binary algebraic structures. A \textbf{\twemoji{1f602} from $\langle \twemoji{1f600},\twemoji{1f605}\rangle$ to $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$} is a function $\twemoji{1f602}$ : $\twemoji{1f600}\rightarrow \twemoji{1f600}'$ such that for all $\twemoji{1f603}$, $\twemoji{1f604}\in \twemoji{1f600}$,\begin{equation*}\twemoji{1f602}(\twemoji{1f603}\twemoji{1f605} \twemoji{1f604}) = \twemoji{1f602}(\twemoji{1f603}) \twemoji{1f605}'\twemoji{1f602}(\twemoji{1f604})
+\end{equation*}
+\subsubsection{\textsc{Induction}}
+The following is a portion of a proof by induction that for all natural numbers $\twemoji{1f600}$, $\twemoji{1f600}^3 - \twemoji{1f600}$ is divisible by 6. At this point in the proof, it has been assumed that $\twemoji{1f601}^3 - \twemoji{1f601}$ is divisible by 6, and it is being shown that $(\twemoji{1f601}+1)^3 - (\twemoji{1f601}+1)$ is therefore also divisible by 6.\begin{align*}(\twemoji{1f601}+1)^3 - (\twemoji{1f601} + 1) &= (\twemoji{1f601}^3 +3\twemoji{1f601}^2 + 3\twemoji{1f601} + 1) - (\twemoji{1f601} + 1)\\&= (\twemoji{1f601}^3 - \twemoji{1f601}) + (3\twemoji{1f601}^2 + 3\twemoji{1f601})\\&= (\twemoji{1f601}^3 - \twemoji{1f601}) + 3\twemoji{1f601}(\twemoji{1f601}+1)
+\end{align*}
+\subsubsection{\textsc{Product Rule}}
+The \textit{product rule} for derivatives says that if $\twemoji{1f600}$ and $\twemoji{1f601}$ are differentiable functions, then\begin{align*}(\twemoji{1f600}\twemoji{1f601})' = \twemoji{1f600}\twemoji{1f601}' + \twemoji{1f600}'\twemoji{1f601} 
+\end{align*}
+\subsubsection{\textsc{Proof}}
+\begin{theorem}Suppose $\langle \twemoji{1f600},\twemoji{1f605}\rangle$ and $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$ be binary algebraic structures, and $\twemoji{1f602}$ is an isomorphism from $\langle \twemoji{1f600},\twemoji{1f605}\rangle$ onto $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$. Further suppose that $\twemoji{1f607}$ is a left identity element in $\langle \twemoji{1f600},\twemoji{1f605}\rangle$. Then $\twemoji{1f602}(\twemoji{1f607})$ is a left identity element in $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$.\end{theorem}
+        
+        \begin{proof}Let $\twemoji{1f606}'$ be an element of $\twemoji{1f600}'$. Since $\twemoji{1f602}$ is onto, there exists some $\twemoji{1f606}\in \twemoji{1f600}$ such that $\twemoji{1f602}(\twemoji{1f606}) = \twemoji{1f606}'$. Hence\begin{equation*}\twemoji{1f606}' = \twemoji{1f602}(\twemoji{1f606}) = \twemoji{1f602}(\twemoji{1f607}\twemoji{1f605} \twemoji{1f606}) = \twemoji{1f602}(\twemoji{1f607})\twemoji{1f605}'\twemoji{1f602}(\twemoji{1f606}) = \twemoji{1f602}(\twemoji{1f607})\twemoji{1f605}'\twemoji{1f606}'
+        \end{equation*}
+        \end{proof}
+\subsubsection{\textsc{Set Theory}}
+The following is a proof in a set theory textbook that if $\twemoji{1f600}$ is a transitive set, then $\bigcup (\twemoji{1f600}^+)=\twemoji{1f600}$. Note that a transitive set is defined to be a set $\twemoji{1f600}$ such that all members of $\twemoji{1f600}$ are subsets of $\twemoji{1f600}$, and $\twemoji{1f600}^+$ is defined to be $\twemoji{1f600}\cup \{\twemoji{1f600}\}$\begin{proof}\begin{align*}(\bigcup \twemoji{1f600}^+) &= \bigcup(\twemoji{1f600} \cup \{\twemoji{1f600}\})\\&= (\bigcup \twemoji{1f600})\cup(\bigcup \{\twemoji{1f600}\})\\&= (\bigcup \twemoji{1f600})\cup \twemoji{1f600}\\&= \twemoji{1f600}
+\end{align*}\end{proof}
+\subsection{Emoji-Substituted Reworded Proof Variants}
+\subsubsection{\textsc{Difference Quotient}}
+Let $\twemoji{1f602}$: $\mathbb{R}\rightarrow\mathbb{R}$ be the function $\twemoji{1f602}(\twemoji{1f604}) = \twemoji{1f604}^2$. The following shows the difference quotient:\begin{align*}\frac{\twemoji{1f602}(\twemoji{1f604} + \twemoji{1f603}) - \twemoji{1f602}(\twemoji{1f604})}{(\twemoji{1f604} + \twemoji{1f603})-\twemoji{1f604}} &= \frac{\twemoji{1f602}(\twemoji{1f604} + \twemoji{1f603}) - \twemoji{1f602}(\twemoji{1f604})}{\twemoji{1f603}}\\&= \frac{(\twemoji{1f604} + \twemoji{1f603})^2 - \twemoji{1f604}^2}{\twemoji{1f603}}\\&= \frac{\twemoji{1f604}^2 + 2\twemoji{1f604}\twemoji{1f603} + \twemoji{1f603}^2 - \twemoji{1f604}^2}{\twemoji{1f603}}\\&= \frac{2\twemoji{1f604}\twemoji{1f603}}{\twemoji{1f603}^2}\\&= 2\twemoji{1f604} + \twemoji{1f603}
+\end{align*}
+\subsubsection{\textsc{Distributive}}
+For all numbers $\twemoji{1f600}$, $\twemoji{1f601}$, and $\twemoji{1f602}$, the distributive law states that \begin{equation*}\twemoji{1f600}(\twemoji{1f601}+\twemoji{1f602}) = \twemoji{1f600}\twemoji{1f601} + \twemoji{1f600}\twemoji{1f602}
+\end{equation*}
+\subsubsection{\textsc{Exponents Diff Rule}}
+Here are some exponent properties:\begin{equation*}\frac{\text{\twemoji{1f600}}^{\text{\twemoji{1f601}}}}{\text{\twemoji{1f600}}^{\text{\twemoji{1f602}}}} = \text{\twemoji{1f600}}^{\text{\twemoji{1f601} - \twemoji{1f602}}}
+\end{equation*}
+\subsubsection{\textsc{Exponents Power Rule}}
+Here are some exponent properties:\begin{equation*}(\text{\twemoji{1f600}}^{\text{\twemoji{1f601}}})^{\text{\twemoji{1f602}}} = \text{\twemoji{1f600}}^{\text{\twemoji{1f601} \twemoji{1f602}}}
+\end{equation*}
+\subsubsection{\textsc{Exponents Prod Rule}}
+Here are some exponent properties:\begin{equation*}\text{\twemoji{1f600}}^{\text{\twemoji{1f601}}} * \text{\twemoji{1f600}}^{\text{\twemoji{1f602}}} = \text{\twemoji{1f600}}^{\text{\twemoji{1f601} + \twemoji{1f602}}}
+\end{equation*}
+\subsubsection{\textsc{Homomorphism}}
+If $\langle \twemoji{1f600},\twemoji{1f605}\rangle$ and $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$ are binary algebraic structures, a \textbf{\twemoji{1f602} from $\langle \twemoji{1f600},\twemoji{1f605}\rangle$ to $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$} is a function $\twemoji{1f602}$ : $\twemoji{1f600}\rightarrow \twemoji{1f600}'$ such that $\forall$ $\twemoji{1f603}$, $\twemoji{1f604}\in \twemoji{1f600}$,\begin{equation*}\twemoji{1f602}(\twemoji{1f603}\twemoji{1f605} \twemoji{1f604}) = \twemoji{1f602}(\twemoji{1f603}) \twemoji{1f605}'\twemoji{1f602}(\twemoji{1f604})
+\end{equation*}
+\subsubsection{\textsc{Induction}}
+Inductively prove that $\forall \twemoji{1f600}\in\mathbb{N}$, $\twemoji{1f600}^3 - \twemoji{1f600}$ is divisible by 6. We will show that $(\twemoji{1f601}+1)^3 - (\twemoji{1f601}+1)$ is divisible by 6, with the prior assumption that $\twemoji{1f601}^3 - \twemoji{1f601}$ is divisible by 6.\begin{align*}(\twemoji{1f601}+1)^3 - (\twemoji{1f601} + 1) &= (\twemoji{1f601}^3 +3\twemoji{1f601}^2 + 3\twemoji{1f601} + 1) - (\twemoji{1f601} + 1)\\&= (\twemoji{1f601}^3 - \twemoji{1f601}) + (3\twemoji{1f601}^2 + 3\twemoji{1f601})\\&= (\twemoji{1f601}^3 - \twemoji{1f601}) + 3\twemoji{1f601}(\twemoji{1f601}+1)
+\end{align*}
+\subsubsection{\textsc{Product Rule}}
+If $\twemoji{1f600}$ and $\twemoji{1f601}$ are differentiable functions, then the \textit{product rule} states that \begin{align*}(\twemoji{1f600}\twemoji{1f601})' = \twemoji{1f600}\twemoji{1f601}' + \twemoji{1f600}'\twemoji{1f601} 
+\end{align*}
+\subsubsection{\textsc{Proof}}
+\begin{theorem} $\twemoji{1f602}$ is an isomorphism from $\langle \twemoji{1f600},\twemoji{1f605}\rangle$ onto $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$ where $\langle \twemoji{1f600},\twemoji{1f605}\rangle$ and $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$ are both binary algebraic structures. If $\twemoji{1f607}$ is a left identity element in $\langle \twemoji{1f600},\twemoji{1f605}\rangle$, then $\twemoji{1f602}(\twemoji{1f607})$ is a left identity element in $\langle \twemoji{1f600}',\twemoji{1f605}'\rangle$.\end{theorem}
+        
+        \begin{proof}Let $\twemoji{1f606}'\in \twemoji{1f600}'$. Due to $\twemoji{1f602}$ being onto, $\exists \twemoji{1f606}\in \twemoji{1f600}$ such that $\twemoji{1f602}(\twemoji{1f606}) = \twemoji{1f606}'$. Hence\begin{equation*}\twemoji{1f606}' = \twemoji{1f602}(\twemoji{1f606}) = \twemoji{1f602}(\twemoji{1f607}\twemoji{1f605} \twemoji{1f606}) = \twemoji{1f602}(\twemoji{1f607})\twemoji{1f605}'\twemoji{1f602}(\twemoji{1f606}) = \twemoji{1f602}(\twemoji{1f607})\twemoji{1f605}'\twemoji{1f606}'
+\end{equation*}
+\end{proof}
+\subsubsection{\textsc{Set Theory}}
+A transitive set is defined to be a set $\twemoji{1f600}$ such that all members of $a$ are subsets of $\twemoji{1f600}$, and $\twemoji{1f600}^+$ is defined to be $\twemoji{1f600}\cup \{\twemoji{1f600}\}$. We show a proof that if $\twemoji{1f600}$ is a transitive set, then $\bigcup (\twemoji{1f600}^+)=\twemoji{1f600}$.\begin{proof}\begin{align*}(\bigcup \twemoji{1f600}^+) &= \bigcup(\twemoji{1f600} \cup \{\twemoji{1f600}\})\\&= (\bigcup \twemoji{1f600})\cup(\bigcup \{\twemoji{1f600}\})\\&= (\bigcup \twemoji{1f600})\cup \twemoji{1f600}\\&= \twemoji{1f600}
+\end{align*}\end{proof}
+
+
+
+\end{document}
+
